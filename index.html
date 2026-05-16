@@ -23,6 +23,20 @@
       --radius:12px;
       --ease: cubic-bezier(.2,.9,.25,1);
     }
+/* Reserve space below fixed top bar + nav so content doesn’t hide under them */
+@media (max-width: 900px) {
+  body {
+    /* top bar (48px) + nav padding/bottom (~48–56px) */
+    padding-top: 120px;
+  }
+}
+
+/* On desktop (optional, less aggressive) */
+@media (min-width: 901px) {
+  body {
+    padding-top: 160px;
+  }
+}
 
     /* Reset */
     *{box-sizing:border-box}
