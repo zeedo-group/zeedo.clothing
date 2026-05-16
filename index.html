@@ -1,9 +1,8 @@
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" />
   <title>ZEEDO — Heritage Menswear</title>
 
   <!-- Google Fonts -->
@@ -27,19 +26,21 @@
 
     /* Reset */
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
+    html,body{
       margin:0;
+      padding:0;
+      height:auto;
+      min-height:100vh;
       background:linear-gradient(180deg,var(--bg) 0%, #060606 100%);
       color:var(--muted);
       font-family:'Montserrat',system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      cursor:none; /* hide default cursor per requirement */
+      cursor:none; /* hide default cursor */
       overflow-x:hidden;
     }
 
-    /* Custom cursor elements (above everything) */
+    /* Custom cursor elements */
     .cursor-dot, .cursor-ring{
       position:fixed;
       top:0; left:0;
@@ -150,13 +151,13 @@
     /* Main nav */
     header.navbar{
       position:fixed;
-      top:56px;
+      top:48px; /* below topbar */
       left:12px; right:12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding:18px 26px;
-      border-radius:14px;
+      padding:14px 22px;
+      border-radius:12px;
       background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
       box-shadow:var(--shadow);
       backdrop-filter: blur(10px);
@@ -166,112 +167,128 @@
 
     .brand{
       display:flex;
-      gap:14px;
+      gap:12px;
       align-items:center;
     }
     .brand .logo{
-      width:56px;height:56px;border-radius:8px;
+      width:52px;height:52px;border-radius:8px;
       background:linear-gradient(145deg, rgba(201,168,76,0.14), rgba(201,168,76,0.06));
       display:flex;align-items:center;justify-content:center;
       font-family:'Cormorant Garamond',serif;
       color:var(--gold);
-      font-size:20px;
-      letter-spacing:1px;
+      font-size:18px;
+      letter-spacing:0.8px;
       box-shadow:inset 0 -6px 14px rgba(0,0,0,0.6);
     }
     .brand .title{
       display:flex;flex-direction:column;
-      line-height:1;
+      line-height:1.1;
     }
     .brand .title .name{
       font-family:'Cormorant Garamond',serif;
-      font-size:20px;
+      font-size:18px;
       color:var(--muted);
-      letter-spacing:1px;
+      letter-spacing:0.8px;
     }
     .brand .title .tag{
-      font-size:11px;color:rgba(234,230,221,0.6);font-family:Montserrat,sans-serif;
+      font-size:10px;color:rgba(234,230,221,0.6);font-family:Montserrat,sans-serif;
     }
 
-    nav.mainlinks{display:flex;gap:20px;align-items:center}
+    nav.mainlinks{display:flex;gap:16px;align-items:center}
     nav.mainlinks a{
       color:rgba(234,230,221,0.9);
       text-decoration:none;
       font-weight:600;
-      font-size:15px;
-      padding:8px 10px;
-      border-radius:8px;
+      font-size:14px;
+      padding:6px 10px;
+      border-radius:6px;
       transition:background 200ms var(--ease), color 180ms var(--ease);
       cursor:pointer;
     }
     nav.mainlinks a:hover{background:rgba(255,255,255,0.02)}
     nav.mainlinks a.active{color:var(--gold)}
 
-    /* Page container (below nav) */
+    /* Page container */
     main.container{
-      padding:160px 48px 100px 48px;
-      max-width:1300px;
+      padding:120px 18px 60px;
+      max-width:100%;
       margin:0 auto;
+      width:100%;
     }
 
     /* Sections */
-    section{min-height:60vh; padding:40px 0; display:none}
-    section.active{display:block}
+    section{
+      min-height: auto;
+      padding:20px 0;
+      display:none;
+    }
+    section.active{
+      display:block;
+    }
 
     /* Hero */
     .hero{
-      display:flex;gap:48px;align-items:center;justify-content:space-between;
+      display:flex;
+      flex-direction:column;
+      gap:24px;
     }
     .hero .left{
-      max-width:680px;
+      max-width:none;
     }
     .eyebrow{
       color:var(--gold);
       font-family:'Montserrat',sans-serif;
-      letter-spacing:2px;
-      font-size:13px;
-      margin-bottom:12px;
+      letter-spacing:1.8px;
+      font-size:12px;
+      margin-bottom:8px;
     }
     h1{
       font-family:'Cormorant Garamond',serif;
-      font-size:64px;
-      margin:0 0 18px 0;
+      font-size:36px;
+      margin:0 0 12px 0;
       color:var(--muted);
-      line-height:1.02;
+      line-height:1.08;
       letter-spacing:0.4px;
     }
     p.lead{
       color:rgba(234,230,221,0.78);
-      max-width:540px;
-      font-size:16px;
-      margin:0 0 28px 0;
+      font-size:14px;
+      margin:0 0 20px 0;
     }
     .cta{
-      display:flex;gap:12px;
+      display:flex;gap:10px;
+      flex-wrap:wrap;
     }
     .btn{
       background:transparent;
       color:var(--muted);
       border:1px solid rgba(255,255,255,0.04);
-      padding:12px 18px;
-      border-radius:10px;
+      padding:10px 14px;
+      border-radius:8px;
       cursor:pointer;
       font-weight:600;
+      font-size:13px;
+      border-radius:8px;
       transition:all 220ms var(--ease);
     }
     .btn.primary{
       background:linear-gradient(90deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06));
       color:var(--gold);
       border:1px solid rgba(201,168,76,0.14);
-      box-shadow:0 8px 30px rgba(0,0,0,0.6);
+      box-shadow:0 6px 20px rgba(0,0,0,0.6);
     }
     .hero .visual{
-      width:420px;height:520px;border-radius:14px;
+      width:100%;
+      height:240px;
+      margin-top:8px;
+      border-radius:12px;
       background:
         linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.2)),
-        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="420" height="520"><rect width="100%" height="100%" fill="%230a0a0a"/></svg>');
-      display:flex;align-items:flex-end;justify-content:flex-start;
-      padding:22px;
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="240"><rect width="100%" height="100%" fill="%230a0a0a"/></svg>');
+      display:flex;
+      align-items:flex-end;
+      justify-content:flex-start;
+      padding:16px;
       border:1px solid rgba(255,255,255,0.03);
       box-shadow:var(--shadow);
       position:relative;
@@ -280,24 +297,28 @@
     .visual .tag{
       font-family:'Cormorant Garamond',serif;
       color:var(--gold);
-      font-size:14px;
+      font-size:12px;
       background:rgba(255,255,255,0.02);
-      padding:10px 14px;border-radius:8px;
+      padding:6px 10px;
+      border-radius:6px;
     }
 
     /* Collection grid */
     .grid{
       display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
-      gap:20px;
-      margin-top:18px;
+      grid-template-columns:1fr;
+      gap:14px;
+      margin-top:20px;
+    }
+    @media (min-width: 600px){
+      .grid{ grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); }
     }
     .card{
       position:relative;
       background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
-      border-radius:14px;
+      border-radius:12px;
       overflow:hidden;
-      min-height:320px;
+      min-height:220px;
       display:flex;
       flex-direction:column;
       justify-content:flex-end;
@@ -305,106 +326,223 @@
       transition:transform 300ms var(--ease), box-shadow 300ms var(--ease);
       cursor:pointer;
     }
-    .card:hover{transform:translateY(-8px); box-shadow:0 20px 40px rgba(0,0,0,0.6)}
-    .card .image{
-      position:absolute;inset:0;
-      background-size:cover;background-position:center;
-      filter:grayscale(18%) contrast(92%);
-      transition:transform 550ms var(--ease);
+    .card:hover{
+      transform:translateY(-6px);
+      box-shadow:0 16px 32px rgba(0,0,0,0.6);
     }
-    .card:hover .image{transform:scale(1.03)}
+    .card .image{
+      position:absolute;
+      inset:0;
+      background-size:cover;
+      background-position:center;
+      filter:grayscale(18%) contrast(92%);
+      transition:transform 500ms var(--ease);
+    }
+    .card:hover .image{
+      transform:scale(1.03);
+    }
     .card .meta{
       position:relative;
-      padding:18px;
+      padding:12px;
       background:linear-gradient(180deg, transparent, rgba(0,0,0,0.6));
       z-index:2;
     }
-    .card h3{margin:0;font-family:'Cormorant Garamond',serif;color:var(--muted);font-size:18px}
-    .card .price{color:var(--gold);font-weight:700;margin-top:6px}
+    .card h3{
+      margin:0;
+      font-family:'Cormorant Garamond',serif;
+      color:var(--muted);
+      font-size:15px;
+    }
+    .card .price{
+      color:var(--gold);
+      font-weight:700;
+      margin-top:4px;
+      font-size:13px;
+    }
     .card .overlay{
-      position:absolute;inset:0;
+      position:absolute;
+      inset:0;
       background:linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.6));
       opacity:0;
-      display:flex;flex-direction:column;justify-content:flex-end;
-      padding:18px;
-      transition:opacity 240ms var(--ease);
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      padding:12px;
+      transition:opacity 220ms var(--ease);
     }
-    .card:hover .overlay{opacity:1}
+    .card:hover .overlay{
+      opacity:1;
+    }
     .order-btn{
       background:linear-gradient(90deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06));
       color:var(--gold);
       border:1px solid rgba(201,168,76,0.12);
-      padding:10px 14px;border-radius:10px;
+      padding:8px 12px;
+      border-radius:8px;
       font-weight:700;
+      font-size:13px;
       cursor:pointer;
-      width:fit-content;
+      align-self:flex-start;
     }
 
     /* About */
     .about{
-      max-width:900px;
+      max-width:100%;
       line-height:1.6;
       color:rgba(234,230,221,0.86);
-      font-size:15px;
+      font-size:14px;
     }
-    .about h2{font-family:'Cormorant Garamond',serif;color:var(--muted);font-size:32px;margin-top:0}
+    .about h2{
+      font-family:'Cormorant Garamond',serif;
+      color:var(--muted);
+      font-size:24px;
+      margin:0 0 12px 0;
+    }
+    .about p{
+      margin:8px 0;
+    }
 
     /* Slide-out drawer */
     .drawer-backdrop{
-      position:fixed; inset:0;
+      position:fixed;
+      inset:0;
       background:rgba(0,0,0,0.6);
       opacity:0;
       pointer-events:none;
       transition:opacity 320ms var(--ease);
       z-index:9800;
     }
-    .drawer-backdrop.open{opacity:1; pointer-events:auto}
+    .drawer-backdrop.open{
+      opacity:1;
+      pointer-events:auto;
+    }
     .drawer{
       position:fixed;
-      right:-520px;
+      right:-320px;
       top:0;
       height:100%;
-      width:420px;
+      width:320px;
       background:linear-gradient(180deg,var(--bg-deep), #070707);
-      box-shadow:-30px 0 60px rgba(0,0,0,0.8);
-      padding:28px;
+      box-shadow:-20px 0 40px rgba(0,0,0,0.8);
+      padding:20px;
       z-index:9900;
-      transition:right 360ms var(--ease);
+      transition:right 340ms var(--ease);
       border-left:1px solid rgba(255,255,255,0.03);
-      display:flex;flex-direction:column;gap:14px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
     }
-    .drawer.open{right:0}
-    .drawer h3{margin:0;font-family:'Cormorant Garamond',serif;color:var(--muted)}
+    .drawer.open{
+      right:0;
+    }
+    .drawer h3{
+      margin:0 0 10px;
+      font-family:'Cormorant Garamond',serif;
+      color:var(--muted);
+      font-size:18px;
+    }
     .drawer .item{
-      display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02)
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px;
+      border-radius:8px;
+      background:rgba(255,255,255,0.02);
     }
-    .form-group{display:flex;flex-direction:column;gap:6px;margin-top:8px}
-    .form-group label{font-size:13px;color:rgba(234,230,221,0.7)}
-    .form-group input, .form-group textarea{
-      background:transparent;border:1px solid rgba(255,255,255,0.04);padding:10px;border-radius:8px;color:var(--muted);outline:none;
+    .form-group{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      margin-top:6px;
+    }
+    .form-group label{
+      font-size:12px;
+      color:rgba(234,230,221,0.7);
+    }
+    .form-group input,
+    .form-group textarea{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.04);
+      padding:8px;
+      border-radius:6px;
+      color:var(--muted);
+      outline:none;
+      font-size:13px;
     }
     .submit{
-      margin-top:12px;padding:12px;border-radius:10px;border:0;background:var(--gold);color:#0a0a0a;font-weight:800;cursor:pointer;
+      margin-top:10px;
+      padding:10px;
+      border-radius:8px;
+      border:0;
+      background:var(--gold);
+      color:#0a0a0a;
+      font-weight:800;
+      font-size:14px;
+      cursor:pointer;
     }
     .processing{
-      opacity:0.92;background:linear-gradient(90deg, rgba(201,168,76,0.14), rgba(201,168,76,0.06));
-      color:var(--gold);border:1px solid rgba(201,168,76,0.12);
+      opacity:0.92;
+      background:linear-gradient(90deg, rgba(201,168,76,0.14), rgba(201,168,76,0.06));
+      color:var(--gold);
+      border:1px solid rgba(201,168,76,0.12);
     }
 
     /* Page transition overlay */
     .transition-overlay{
-      position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:9990;
+      position:fixed;
+      inset:0;
+      background:#000;
+      opacity:0;
+      pointer-events:none;
+      z-index:9990;
       transition:opacity 560ms var(--ease);
     }
-    .transition-overlay.on{opacity:1;pointer-events:auto}
+    .transition-overlay.on{
+      opacity:1;
+      pointer-events:auto;
+    }
 
     /* Footer small */
-    footer{opacity:0.7;padding:40px 0 80px 0;text-align:center;color:rgba(234,230,221,0.6)}
-    @media (max-width:900px){
-      .hero{flex-direction:column-reverse}
-      header.navbar{left:12px;right:12px;padding:14px}
-      main.container{padding:120px 18px 80px}
-      .visual{width:100%;height:360px}
+    footer{
+      padding:40px 18px 60px;
+      text-align:center;
+      color:rgba(234,230,221,0.6);
+      font-size:12px;
+    }
+
+    /* Mobile fixes */
+    @media (max-width: 900px){
+      body{ font-size:0.95rem; }
+      .hero{
+        flex-direction:column;
+      }
+      h1{
+        font-size:32px;
+        margin-bottom:10px;
+      }
+      .hero .visual{
+        width:100%;
+        height:220px;
+      }
+      .grid{
+        grid-template-columns:1fr;
+        gap:12px;
+      }
+      .card{
+        min-height:200px;
+      }
+      .card h3{ font-size:14px; }
+      .card .price{ font-size:12px; }
+      .card .meta{ padding:10px; }
+      .card .overlay{ padding:10px; }
+      .order-btn{ font-size:12px; padding:6px 10px; }
+      .about h2{ font-size:22px; }
+      .about p{ font-size:13px; }
+      .submit{ font-size:13px; padding:9px; }
+      .drawer{
+        width:300px;
+        right:-300px;
+      }
     }
   </style>
 </head>
@@ -421,7 +559,10 @@
 
     <div class="top-actions">
       <div class="search" id="searchWrap" title="Search ZEEDO">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" style="opacity:0.85"><path stroke="rgba(234,230,221,0.85)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/><circle cx="11" cy="11" r="5" stroke="rgba(234,230,221,0.85)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" style="opacity:0.85">
+          <path stroke="rgba(234,230,221,0.85)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/>
+          <circle cx="11" cy="11" r="5" stroke="rgba(234,230,221,0.85)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
         <input id="searchInput" placeholder="Search collection..." aria-label="Search">
       </div>
 
@@ -464,8 +605,8 @@
         </div>
 
         <div class="visual" aria-hidden="true">
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <div style="width:180px;height:8px;background:linear-gradient(90deg,var(--gold), rgba(201,168,76,0.06));border-radius:6px;opacity:0.9"></div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="width:120px;height:6px;background:linear-gradient(90deg,var(--gold), rgba(201,168,76,0.06));border-radius:4px;opacity:0.9"></div>
             <div class="tag">Made in Milan — Limited Runs</div>
           </div>
         </div>
@@ -474,15 +615,14 @@
 
     <!-- Collection -->
     <section id="collection" aria-labelledby="collectionTitle">
-      <h2 id="collectionTitle" style="font-family:'Cormorant Garamond',serif;color:var(--muted);font-size:30px;margin-bottom:10px">Collection</h2>
+      <h2 id="collectionTitle" style="font-family:'Cormorant Garamond',serif;color:var(--muted);font-size:24px;margin-bottom:10px">Collection</h2>
       <div class="grid" id="productGrid" role="list">
-        <!-- Product cards (JS will populate data attributes remain for accessibility) -->
         <article class="card" data-id="1" data-name="The Savile Overcoat" data-price="€1,450" role="listitem" tabindex="0">
-          <div class="image" style="background-image:url('https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder');"></div>
+          <div class="image" style="background-image:url('https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800&q=80&auto=format&fit=crop&ixlib=rb-4.0.3');"></div>
           <div class="overlay">
             <div style="display:flex;justify-content:space-between;align-items:center;">
               <div>
-                <div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--muted)">The Savile Overcoat</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted)">The Savile Overcoat</div>
                 <div class="price">€1,450</div>
               </div>
               <button class="order-btn" data-action="order">Order Now</button>
@@ -495,11 +635,11 @@
         </article>
 
         <article class="card" data-id="2" data-name="The Riviera Blazer" data-price="€980" role="listitem" tabindex="0">
-          <div class="image" style="background-image:url('https://images.unsplash.com/photo-1540574163026-643ea20ade25?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder');"></div>
+          <div class="image" style="background-image:url('https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=800&q=80&auto=format&fit=crop&ixlib=rb-4.0.3');"></div>
           <div class="overlay">
             <div style="display:flex;justify-content:space-between;align-items:center;">
               <div>
-                <div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--muted)">The Riviera Blazer</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted)">The Riviera Blazer</div>
                 <div class="price">€980</div>
               </div>
               <button class="order-btn" data-action="order">Order Now</button>
@@ -512,11 +652,11 @@
         </article>
 
         <article class="card" data-id="3" data-name="The Atelier Trouser" data-price="€420" role="listitem" tabindex="0">
-          <div class="image" style="background-image:url('https://images.unsplash.com/photo-1541099649105-ec4acb6a1bfc?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder');"></div>
+          <div class="image" style="background-image:url('https://images.unsplash.com/photo-1541099649105-ec4acb6a1bfc?w=800&q=80&auto=format&fit=crop&ixlib=rb-4.0.3');"></div>
           <div class="overlay">
             <div style="display:flex;justify-content:space-between;align-items:center;">
               <div>
-                <div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--muted)">The Atelier Trouser</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted)">The Atelier Trouser</div>
                 <div class="price">€420</div>
               </div>
               <button class="order-btn" data-action="order">Order Now</button>
@@ -524,16 +664,16 @@
           </div>
           <div class="meta">
             <h3>The Atelier Trouser</h3>
-            <div class="price">€420</div>
+                   <div class="price">€420</div>
           </div>
         </article>
 
         <article class="card" data-id="4" data-name="The Meridian Shirt" data-price="€220" role="listitem" tabindex="0">
-          <div class="image" style="background-image:url('https://images.unsplash.com/photo-1520975668421-49a7f0d3b0b3?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=placeholder');"></div>
+          <div class="image" style="background-image:url('https://images.unsplash.com/photo-1520975668421-49a7f0d3b0b3?w=800&q=80&auto=format&fit=crop&ixlib=rb-4.0.3');"></div>
           <div class="overlay">
             <div style="display:flex;justify-content:space-between;align-items:center;">
               <div>
-                <div style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--muted)">The Meridian Shirt</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--muted)">The Meridian Shirt</div>
                 <div class="price">€220</div>
               </div>
               <button class="order-btn" data-action="order">Order Now</button>
@@ -552,10 +692,9 @@
       <div class="about">
         <h2 id="aboutTitle">Craftsmanship & Values</h2>
         <p>ZEEDO was founded on a devotion to cut, cloth, and the quiet certainty of impeccably made garments. We produce small runs, maintain artisanal partnerships, and adhere to sustainable practices across our ateliers.</p>
-        <p style="margin-top:12px">Our design language is restrained — a studied refusal of flash, where details reveal themselves to those who look closely. Each piece carries a serial provenance code and a lifetime care program.</p>
+        <p>Our design language is restrained — a studied refusal of flash, where details reveal themselves to those who look closely. Each piece carries a serial provenance code and a lifetime care program.</p>
       </div>
     </section>
-
   </main>
 
   <footer>
@@ -572,7 +711,7 @@
         <div id="selectedName" style="font-family:'Cormorant Garamond',serif">No item selected</div>
         <div id="selectedPrice" style="color:var(--gold);font-weight:700;margin-top:6px">—</div>
       </div>
-      <div style="font-size:12px;color:rgba(234,230,221,0.6)">Limited</div>
+      <div style="font-size:11px;color:rgba(234,230,221,0.6)">Limited</div>
     </div>
 
     <form id="deliveryForm" autocomplete="off">
@@ -594,16 +733,13 @@
       <button type="submit" class="submit" id="confirmBtn">Confirm Luxury Delivery</button>
     </form>
 
-    <div style="margin-top:auto;font-size:12px;color:rgba(234,230,221,0.45)">Secure checkout • Complimentary white-glove packaging</div>
+    <div style="margin-top:auto;font-size:12px;color:rgba(234,230,221,0.45)">Secure checkout • Complimentary white‑glove packaging</div>
   </aside>
 
   <script>
     // Small helper: query
     const $ = sel => document.querySelector(sel);
     const $$ = sel => Array.from(document.querySelectorAll(sel));
-
-    // Fonts note (citation): Cormorant Garamond for headings, Montserrat for UI were included via Google Fonts [web:1][web:2].
-    // (Page must include at least one citation per tool output sentence in final text — handled in assistant final message.)
 
     // SPA navigation with fade-to-black transition
     const links = $$('.navlink');
@@ -618,8 +754,8 @@
         Object.values(sections).forEach(s=>s.classList.remove('active'));
         // show target
         sections[target].classList.add('active');
-        // small scroll to top of content area
-        window.scrollTo({top:120, behavior:'smooth'});
+        // scroll to top of content area
+        window.scrollTo({top:100, behavior:'smooth'});
         // remove overlay after short delay
         setTimeout(()=> overlay.classList.remove('on'), 420);
       }, 420);
@@ -637,9 +773,9 @@
     // Search expand
     const searchWrap = $('#searchWrap');
     const searchInput = $('#searchInput');
-    searchWrap.addEventListener('click', ()=> {
+    searchWrap.addEventListener('click', ()=>{
       searchWrap.classList.toggle('open');
-      if(searchWrap.classList.contains('open')) { searchInput.focus(); }
+      if(searchWrap.classList.contains('open')) searchInput.focus();
     });
     // close search if clicking outside
     document.addEventListener('click', (e)=>{
@@ -737,7 +873,7 @@
           btn.disabled=false;
           btn.textContent='Confirm Luxury Delivery';
           closeDrawer();
-          // visual confirmation toast (small)
+          // visual confirmation toast
           showToast('Order confirmed. Our concierge will contact you shortly.');
         }, 750);
       }, 1400);
@@ -748,15 +884,23 @@
       const t = document.createElement('div');
       t.textContent = msg;
       Object.assign(t.style,{
-        position:'fixed', left:'50%', transform:'translateX(-50%)', bottom:'36px', background:'rgba(0,0,0,0.8)',
-        color: 'var(--muted)', padding:'12px 18px', borderRadius:'10px', zIndex:10020, border:'1px solid rgba(255,255,255,0.04)'
+        position:'fixed',
+        left:'50%',
+        transform:'translateX(-50%)',
+        bottom:'36px',
+        background:'rgba(0,0,0,0.8)',
+        color: 'var(--muted)',
+        padding:'12px 18px',
+        borderRadius:'10px',
+        zIndex:10020,
+        border:'1px solid rgba(255,255,255,0.04)'
       });
       document.body.appendChild(t);
       setTimeout(()=> t.style.opacity='0', 2400);
       setTimeout(()=> t.remove(), 3000);
     }
 
-    // Keyboard accessibility: open first product with Enter
+    // Keyboard accessibility
     document.addEventListener('keydown', (e)=>{
       if(e.key === 'Escape') {
         if(drawer.classList.contains('open')) closeDrawer();
@@ -777,7 +921,6 @@
       const ring = document.getElementById('cursorRing');
       let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
       let ringX = mouseX, ringY = mouseY;
-      let isHover = false;
 
       // Update coordinates
       document.addEventListener('mousemove', (e)=>{
@@ -796,7 +939,7 @@
       }
       raf();
 
-      // Hover effects: when hovering interactive elements, enlarge ring
+      // Hover effects
       const hoverTargets = ['button','a','[role="button"]','.order-btn','.card','.navlink','.cart-link','.brand','.search'];
       function setHoverOn(){ ring.classList.add('hover'); }
       function setHoverOff(){ ring.classList.remove('hover'); }
@@ -816,13 +959,12 @@
 
       // Make ring slightly darker when mouse is down
       document.addEventListener('mousedown', ()=>{ ring.style.transform += ' scale(0.98)'; });
-      document.addEventListener('mouseup', ()=>{ /* no-op; natural easing handles it */ });
+      document.addEventListener('mouseup', ()=>{ /* no-op */ });
     })();
 
-    // Enhance product cards keyboard + click
+    // Enhance product cards
     $$('.card').forEach(card=>{
       card.addEventListener('click', (e)=>{
-        // if clicking card but not button, open order
         if(!e.target.closest('[data-action="order"]')){
           const btn = card.querySelector('[data-action="order"]');
           if(btn) btn.click();
@@ -834,10 +976,10 @@
     // Initial cart count
     updateCartCount();
 
-    // Expose navigateTo for inline onClick
+    // Expose navigateTo
     window.navigateTo = navigateTo;
 
-    // Small accessibility: prevent focus outline removal for keyboard users
+    // User-is-keyboard
     (function(){
       let hadKeyboardEvent = false;
       window.addEventListener('keydown', (e)=>{
@@ -849,5 +991,3 @@
   </script>
 </body>
 </html>
-
-
