@@ -89,19 +89,31 @@
     }
 
     /* Top utility bar */
-    .topbar{
-      position:fixed;
-      top:0; left:0; right:0;
-      height:48px;
-      display:flex;
-      align-items:center;
-      gap:18px;
-      padding:0 22px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-      backdrop-filter:blur(6px);
-      z-index:9000;
-      border-bottom:1px solid rgba(255,255,255,0.02);
-    }
+.topbar{
+  position:fixed;
+  top:0; left:0; right:0;
+  height:48px;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:0 22px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  backdrop-filter:blur(6px);
+  z-index:9000;
+  border-bottom:1px solid rgba(255,255,255,0.02);
+}
+
+/* Reserve vertical space so content doesn’t hide under topbar + nav */
+@media (max-width: 900px) {
+  body {
+    padding-top: 120px;
+    scroll-padding-top: 120px;
+  }
+}
+/* Desktop spacing (optional) */
+body {
+  scroll-padding-top: 160px;
+}
     .marquee{
       flex:1;
       overflow:hidden;
