@@ -246,12 +246,12 @@
     <div class="modal-box">
       <button class="modal-box__close" id="shopModalClose" aria-label="Close">✕</button>
 
-      <div class="modal-box__image">
+    <div class="modal-box__image" style="position: relative;">
+        <button id="shopModalPrevBtn" class="gallery-arrow" style="display:none; position:absolute; left:12px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.85); border:none; width:28px; height:28px; font-weight:bold; cursor:pointer; font-size:0.75rem; z-index:10; border-radius:50%;">&lt;</button>
+        <button id="shopModalNextBtn" class="gallery-arrow" style="display:none; position:absolute; right:12px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.85); border:none; width:28px; height:28px; font-weight:bold; cursor:pointer; font-size:0.75rem; z-index:10; border-radius:50%;">&gt;</button>
         <img id="shopModalImg" src="" alt="" style="display:none"/>
-        <div id="shopModalPlaceholder"
-             style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--grey-light)">
-          <span style="font-size:0.58rem;font-weight:700;letter-spacing:0.18em;
-                       text-transform:uppercase;color:var(--grey-mid)">Photo Coming Soon</span>
+        <div id="shopModalPlaceholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--grey-light)">
+          <span style="font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--grey-mid)">Photo Coming Soon</span>
         </div>
       </div>
 
@@ -316,8 +316,14 @@
 
     const fmt = window.ZEEDO?.formatPrice ?? (v => parseInt(v).toLocaleString('en-BD') + ' BDT');
 
-    // ── MODAL STATE ──────────────────────────────────────
+   // ── MODAL STATE ──────────────────────────────────────
     let activeProduct = null;
+    let shopModalImages = [];
+    let shopCurrentImgIndex = 0;
+
+    function updateShopModalImage() {
+      document.getElementById('shopModalImg').src = shopModalImages[shopCurrentImgIndex];
+    }
 
     function openModal(product) {
       activeProduct = product;
@@ -328,18 +334,33 @@
 
       const imgEl      = document.getElementById('shopModalImg');
       const placeholder= document.getElementById('shopModalPlaceholder');
+      const prevBtn    = document.getElementById('shopModalPrevBtn');
+      const nextBtn    = document.getElementById('shopModalNextBtn');
 
       if (product.image && product.image.trim() !== '') {
-        imgEl.src                   = product.image;
-        imgEl.alt                   = product.title;
-        imgEl.style.display         = 'block';
-        placeholder.style.display   = 'none';
+        shopModalImages = product.image.split(',').map(img => img.trim());
+        shopCurrentImgIndex = 0;
+
+        imgEl.src                 = shopModalImages[0];
+        imgEl.alt                 = product.title;
+        imgEl.style.display       = 'block';
+        placeholder.style.display = 'none';
+
+        if (shopModalImages.length > 1) {
+          prevBtn.style.display = 'block';
+          nextBtn.style.display = 'block';
+        } else {
+          prevBtn.style.display = 'none';
+          nextBtn.style.display = 'none';
+        }
       } else {
-        imgEl.style.display         = 'none';
-        placeholder.style.display   = 'flex';
+        shopModalImages = [];
+        imgEl.style.display       = 'none';
+        placeholder.style.display = 'flex';
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
       }
 
-      // Rebuild color dropdown
       const select = document.getElementById('shopModalColor');
       select.innerHTML = '<option value="">Select a color</option>';
       select.classList.remove('error');
@@ -356,6 +377,18 @@
       document.body.style.overflow = 'hidden';
     }
 
+    document.getElementById('shopModalPrevBtn').addEventListener('click', () => {
+      if (shopModalImages.length <= 1) return;
+      shopCurrentImgIndex = (shopCurrentImgIndex - 1 + shopModalImages.length) % shopModalImages.length;
+      updateShopModalImage();
+    });
+
+    document.getElementById('shopModalNextBtn').addEventListener('click', () => {
+      if (shopModalImages.length <= 1) return;
+      shopCurrentImgIndex = (shopCurrentImgIndex + 1) % shopModalImages.length;
+      updateShopModalImage();
+    });
+
     function closeModal() {
       document.getElementById('shopModal').classList.remove('open');
       document.body.style.overflow = '';
@@ -367,7 +400,6 @@
       window.location.href = 'order.html';
     }
 
-    // Order Now from modal — validate color first
     document.getElementById('shopModalOrderBtn').addEventListener('click', () => {
       if (!activeProduct) return;
       const select = document.getElementById('shopModalColor');
@@ -377,9 +409,12 @@
         select.focus();
         return;
       }
-      goToOrder({ ...activeProduct, selectedColor: select.value });
+      goToOrder({ 
+        ...activeProduct, 
+        image: shopModalImages[shopCurrentImgIndex] || '', 
+        selectedColor: select.value 
+      });
     });
-
     // Close triggers
     document.getElementById('shopModalClose').addEventListener('click', closeModal);
     document.getElementById('shopModalCloseBtn').addEventListener('click', closeModal);
@@ -422,9 +457,9 @@
       const imgWrap = document.createElement('div');
       imgWrap.className = 'product-card__image-wrap';
 
-      if (product.image && product.image.trim() !== '') {
+     if (product.image && product.image.trim() !== '') {
         const img   = document.createElement('img');
-        img.src     = product.image;
+        img.src     = product.image.split(',')[0].trim();
         img.alt     = product.title;
         img.loading = 'lazy';
         imgWrap.appendChild(img);
