@@ -331,19 +331,39 @@
       </div>
     </div>
 
-    <!-- 2-column placeholder grid for lifestyle products -->
-    <div class="lifestyle-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+   <!-- Smart Responsive Grid for Lifestyle Products -->
+    <style>
+      /* Desktop defaults */
+      .responsive-lifestyle-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-top: 24px;
+      }
+      /* Mobile override: stack them vertically when the screen is narrow */
+      @media (max-width: 768px) {
+        .responsive-lifestyle-grid {
+          grid-template-columns: 1fr !important;
+          gap: 16px;
+        }
+        .lifestyle-grid__panel {
+          min-height: 300px !important; /* Slightly shorter panels for mobile scrolling */
+        }
+      }
+    </style>
 
-      <!-- Panel 1 -->
-      <div class="lifestyle-grid__panel" style="position: relative; min-height: 400px; overflow: hidden; background: var(--grey-light); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;">
+    <div class="responsive-lifestyle-grid">
+
+      <!-- Panel 1 (home1.jpg) -->
+      <div class="lifestyle-grid__panel" style="position: relative; min-height: 450px; overflow: hidden; background: var(--grey-light); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;">
         <img src="home1.jpg" alt="ZEEDO Lifestyle Drop 01" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; z-index: 1;">
-        <p class="lifestyle-grid__panel-label" style="position: relative; z-index: 2; color: #fff; background: rgba(0,0,0,0.7); padding: 6px 12px; width: max-content; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">LIFESTYLE DROP 01</p>
+        <p class="lifestyle-grid__panel-label" style="position: relative; z-index: 2; color: #fff; background: rgba(0,0,0,0.8); padding: 6px 12px; width: max-content; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">LIFESTYLE DROP 01</p>
       </div>
 
-      <!-- Panel 2 -->
-      <div class="lifestyle-grid__panel" style="position: relative; min-height: 400px; overflow: hidden; background: var(--grey-light); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;">
+      <!-- Panel 2 (home2.jpg) -->
+      <div class="lifestyle-grid__panel" style="position: relative; min-height: 450px; overflow: hidden; background: var(--grey-light); display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;">
         <img src="home2.jpg" alt="ZEEDO Lifestyle Drop 02" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; z-index: 1;">
-        <p class="lifestyle-grid__panel-label" style="position: relative; z-index: 2; color: #fff; background: rgba(0,0,0,0.7); padding: 6px 12px; width: max-content; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">LIFESTYLE DROP 02</p>
+        <p class="lifestyle-grid__panel-label" style="position: relative; z-index: 2; color: #fff; background: rgba(0,0,0,0.8); padding: 6px 12px; width: max-content; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">LIFESTYLE DROP 02</p>
       </div>
 
     </div>
