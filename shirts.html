@@ -18,6 +18,9 @@
   <header></header>
   <script src="header.js" defer></script>
 
+  <!-- ══════════════════════════════════════
+       PAGE HERO
+  ══════════════════════════════════════ -->
   <section style="padding: 56px 0 40px; border-bottom: 1px solid var(--grey-light);">
     <div class="container">
       <p class="t-subheading">Zeedo Clothing</p>
@@ -29,6 +32,26 @@
     </div>
   </section>
 
+  <!-- ══════════════════════════════════════
+       PRODUCT GRID
+
+       STRUCTURAL RULE — READ BEFORE EDITING:
+       ──────────────────────────────────────
+       Every product MUST be a .product-card div
+       with these exact data attributes:
+
+         data-id       Unique integer (increment per product)
+         data-title    Product name shown in UI
+         data-price    Integer ONLY — no symbols (e.g. 1250)
+         data-image    Relative path OR "" if no image yet
+         data-colors   Comma-separated, no spaces around commas
+                       e.g. "Black,White,Stone Grey"
+         data-category Internal label (shown in modal header)
+
+       ★ NEW DROPS → PASTE AT THE TOP OF THIS LIST
+         shop.html reads the FIRST 6 cards it finds,
+         so top = newest = displayed on the hub page.
+  ══════════════════════════════════════ -->
   <main style="padding: 56px 0;">
     <div class="container">
       <div class="grid-3" id="productGrid">
@@ -168,11 +191,16 @@
     </div>
   </main>
 
-  <!-- DETAILS MODAL -->
+  <!-- ══════════════════════════════════════
+       DETAILS MODAL
+  ══════════════════════════════════════ -->
   <div class="modal-overlay" id="detailsModal" aria-modal="true" role="dialog">
     <div class="modal-box">
       <button class="modal-box__close" id="modalClose" aria-label="Close">✕</button>
-      <div class="modal-box__image">
+      
+      <div class="modal-box__image" style="position: relative;">
+        <button id="modalPrevBtn" class="gallery-arrow" style="display:none; position:absolute; left:12px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.85); border:none; width:28px; height:28px; font-weight:bold; cursor:pointer; font-size:0.75rem; z-index:10; border-radius:50%;">&lt;</button>
+        <button id="modalNextBtn" class="gallery-arrow" style="display:none; position:absolute; right:12px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.85); border:none; width:28px; height:28px; font-weight:bold; cursor:pointer; font-size:0.75rem; z-index:10; border-radius:50%;">&gt;</button>
         <img id="modalImg" src="" alt="" style="display:none"/>
         <div id="modalPlaceholder"
              style="width:100%;height:100%;display:flex;align-items:center;
@@ -181,6 +209,7 @@
                        text-transform:uppercase;color:var(--grey-mid)">Photo Coming Soon</span>
         </div>
       </div>
+
       <div class="modal-box__body">
         <p class="modal-box__category" id="modalCategory">Shirts</p>
         <h2 class="modal-box__title"   id="modalTitle">Product Name</h2>
@@ -196,13 +225,16 @@
           <span class="form-error-msg" id="modalColorError">Please select a color.</span>
         </div>
         <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;">
-          <button class="btn btn-primary btn-full" id="modalOrderBtn">Order Now</button>
+          <button class="btn btn-primary btn-full" id="modalOrderBtn">Add to Cart</button>
           <button class="btn btn-ghost   btn-full" id="modalCloseBtn">Close</button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- ══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════ -->
   <footer class="site-footer">
     <div class="container">
       <div class="site-footer__inner">
@@ -215,32 +247,95 @@
   <script>
     const fmt = window.ZEEDO?.formatPrice ?? (v => parseInt(v).toLocaleString('en-BD') + ' BDT');
     let activeCard = null;
+    let modalImages = [];
+    let currentImgIndex = 0;
+
+    // ── AUTOMATED GRID THUMBNAIL INJECTOR ──
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll('.product-card').forEach(card => {
+        const imageAttr = card.dataset.image;
+        if (imageAttr && imageAttr.trim() !== '') {
+          const firstImg = imageAttr.split(',')[0].trim();
+          const imgWrap = card.querySelector('.product-card__image-wrap');
+          if (imgWrap) {
+            imgWrap.innerHTML = `<img src="${firstImg}" alt="${card.dataset.title}" loading="lazy" style="width:100%; height:100%; object-fit:cover;">`;
+          }
+        }
+      });
+    });
+
+    function updateModalImage() {
+      document.getElementById('modalImg').src = modalImages[currentImgIndex];
+    }
 
     function openDetails(card) {
       activeCard = card;
       const { title, price, image, colors, category } = card.dataset;
+      
       document.getElementById('modalTitle').textContent    = title;
       document.getElementById('modalPrice').textContent    = fmt(price);
       document.getElementById('modalCategory').textContent = category;
+      
       const imgEl       = document.getElementById('modalImg');
       const placeholder = document.getElementById('modalPlaceholder');
+      const prevBtn     = document.getElementById('modalPrevBtn');
+      const nextBtn     = document.getElementById('modalNextBtn');
+
       if (image && image.trim() !== '') {
-        imgEl.src = image; imgEl.alt = title; imgEl.style.display = 'block'; placeholder.style.display = 'none';
+        modalImages = image.split(',').map(img => img.trim());
+        currentImgIndex = 0;
+
+        imgEl.src                 = modalImages[0]; 
+        imgEl.alt                 = title; 
+        imgEl.style.display       = 'block'; 
+        placeholder.style.display = 'none';
+
+        if (modalImages.length > 1) {
+          prevBtn.style.display = 'block';
+          nextBtn.style.display = 'block';
+        } else {
+          prevBtn.style.display = 'none';
+          nextBtn.style.display = 'none';
+        }
       } else {
-        imgEl.style.display = 'none'; placeholder.style.display = 'flex';
+        modalImages = [];
+        imgEl.style.display       = 'none'; 
+        placeholder.style.display = 'flex';
+        prevBtn.style.display     = 'none';
+        nextBtn.style.display     = 'none';
       }
+
       const select = document.getElementById('modalColorSelect');
       select.innerHTML = '<option value="">Select a color</option>';
       select.classList.remove('error');
       document.getElementById('modalColorError').classList.remove('visible');
+      
       colors.split(',').forEach(c => {
         const opt = document.createElement('option');
         opt.value = opt.textContent = c.trim();
         select.appendChild(opt);
       });
+
+      // Reset add to cart text configuration on open
+      const cartBtn = document.getElementById('modalOrderBtn');
+      cartBtn.textContent = "Add to Cart";
+      cartBtn.disabled = false;
+
       document.getElementById('detailsModal').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
+
+    document.getElementById('modalPrevBtn').addEventListener('click', () => {
+      if (modalImages.length <= 1) return;
+      currentImgIndex = (currentImgIndex - 1 + modalImages.length) % modalImages.length;
+      updateModalImage();
+    });
+
+    document.getElementById('modalNextBtn').addEventListener('click', () => {
+      if (modalImages.length <= 1) return;
+      currentImgIndex = (currentImgIndex + 1) % modalImages.length;
+      updateModalImage();
+    });
 
     function closeModal() {
       document.getElementById('detailsModal').classList.remove('open');
@@ -248,21 +343,61 @@
       activeCard = null;
     }
 
-    document.getElementById('modalOrderBtn').addEventListener('click', () => {
+    // ── MULTI-ITEM CART MANAGEMENT ENGINE ──
+    function commitToCart(productBundle) {
+      let cart = JSON.parse(localStorage.getItem('ZEEDO_CART')) || [];
+
+      // Detect identical configurations via ID and selected color
+      let identicalItem = cart.find(item => item.id === productBundle.id && item.color === productBundle.selectedColor);
+
+      if (identicalItem) {
+        identicalItem.quantity += 1;
+      } else {
+        cart.push({
+          id: productBundle.id,
+          title: productBundle.title,
+          price: parseInt(productBundle.price),
+          category: productBundle.category,
+          image: productBundle.image,
+          color: productBundle.selectedColor,
+          quantity: 1
+        });
+      }
+
+      localStorage.setItem('ZEEDO_CART', JSON.stringify(cart));
+
+      // Global navigation sync hooks
+      window.dispatchEvent(new Event('cartUpdated'));
+      if (typeof window.updateCartCount === 'function') {
+        window.updateCartCount();
+      }
+    }
+
+    document.getElementById('modalOrderBtn').addEventListener('click', function() {
       if (!activeCard) return;
       const select = document.getElementById('modalColorSelect');
+      
       if (!select.value) {
         select.classList.add('error');
         document.getElementById('modalColorError').classList.add('visible');
-        select.focus(); return;
+        select.focus(); 
+        return;
       }
-      localStorage.setItem('ZEEDO_CHECKOUT_ITEM', JSON.stringify({
-        id: activeCard.dataset.id, title: activeCard.dataset.title,
-        price: activeCard.dataset.price, image: activeCard.dataset.image,
-        colors: activeCard.dataset.colors, category: activeCard.dataset.category,
-        selectedColor: select.value,
-      }));
-      window.location.href = 'order.html';
+
+      this.textContent = "Added to Cart ✓";
+      this.disabled = true;
+
+      commitToCart({
+        id:            activeCard.dataset.id, 
+        title:         activeCard.dataset.title,
+        price:         activeCard.dataset.price, 
+        image:         modalImages[currentImgIndex] || '',
+        category:      activeCard.dataset.category,
+        selectedColor: select.value
+      });
+
+      // Timed window dismissal delay for optimal performance feedback
+      setTimeout(closeModal, 600);
     });
 
     document.getElementById('modalClose').addEventListener('click', closeModal);
