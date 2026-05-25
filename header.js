@@ -1,5 +1,5 @@
 /**
- * ZEEDO CLOTHING — Shared Header Injector v2
+ * ZEEDO CLOTHING — Shared Header Injector v2 (Fixed Cart Routing & Live Sync)
  *
  * Injects:
  *   1. Universal top header (logo left, nav center, search+cart right)
@@ -55,6 +55,26 @@
   window.ZEEDO.formatPrice = formatPrice;
 
   /**
+   * Dynamically read localStorage data and calculate absolute item quantities
+   */
+  function updateHeaderCartCount() {
+    const countBadge = document.getElementById('cart-count');
+    if (!countBadge) return;
+
+    try {
+      const cart = JSON.parse(localStorage.getItem('ZEEDO_CART')) || [];
+      // Calculates the sum totals of all quantities present inside the array
+      const totalItems = cart.reduce((total, item) => total + parseInt(item.quantity || 1, 10), 0);
+      countBadge.textContent = totalItems;
+    } catch (err) {
+      console.error('[header.js] Failed to update cart indicator display:', err);
+      countBadge.textContent = '0';
+    }
+  }
+  // Expose updates method to global execution context boundaries
+  window.ZEEDO.updateCartCount = updateHeaderCartCount;
+
+  /**
    * Get the current page filename (e.g. "shop.html")
    */
   function getCurrentPage() {
@@ -97,8 +117,8 @@
             </svg>
           </a>
 
-          <!-- Cart: static for now, badge ready for dynamic count -->
-          <a href="#" class="header-icon-btn header-cart" aria-label="Cart" tabindex="0">
+          <!-- Cart: ROUTED DIRECTLY TO ORDER.HTML & DYNAMIC NOW -->
+          <a href="order.html" class="header-icon-btn header-cart" aria-label="Cart" tabindex="0">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="1.8"
                  stroke-linecap="round" stroke-linejoin="round">
@@ -146,6 +166,9 @@
 
     headerEl.innerHTML = buildTopHeader(activePage);
 
+    // Run counter calculation array tracking immediately upon layout engine injection
+    updateHeaderCartCount();
+
     // Inject sub-nav as a sibling immediately after <header>
     if (showSubNav) {
       const existing = document.getElementById('zeedo-sub-nav');
@@ -157,6 +180,9 @@
       headerEl.insertAdjacentElement('afterend', subNavEl);
     }
   }
+
+  // Bind cross-script execution listeners for instant event updates
+  window.addEventListener('cartUpdated', updateHeaderCartCount);
 
   // Run on DOM ready
   if (document.readyState === 'loading') {
