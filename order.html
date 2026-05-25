@@ -6,292 +6,52 @@
   <title>ZEEDO clothing — Order</title>
   <link rel="stylesheet" href="styles.css"/>
   <style>
-
     /* ── ORDER PAGE LAYOUT ── */
-    .order-page {
-      min-height: calc(100vh - 64px);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    /* ── LEFT — PRODUCT PREVIEW ── */
-    .order-left {
-      background: var(--grey-light);
-      padding: 64px 56px;
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-      position: sticky;
-      top: 64px;
-      height: calc(100vh - 64px);
-      overflow-y: auto;
-    }
-
-    .order-left__label {
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--grey-mid);
-      margin-bottom: 16px;
-    }
-
-    /* Multi-Item Cart List Layout Container */
-    .cart-items-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    /* Horizontal Card Item Layout Row */
-    .preview-box {
-      background: var(--white);
-      border: 1px solid var(--grey-light);
-      display: flex;
-      flex-direction: row;
-      align-items: stretch;
-    }
-
-    .preview-box__img-wrap {
-      width: 80px;
-      aspect-ratio: 3 / 4;
-      background: #f0f0f0;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      border-right: 1px solid var(--grey-light);
-    }
-
-    .preview-box__img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .preview-box__img-placeholder {
-      font-size: 0.45rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--grey-mid);
-      text-align: center;
-      padding: 8px;
-    }
-
-    .preview-box__body {
-      padding: 16px 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 4px;
-      flex-grow: 1;
-    }
-
-    .preview-box__category {
-      font-size: 0.55rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--grey-mid);
-      line-height: 1;
-    }
-
-    .preview-box__title {
-      font-size: 0.85rem;
-      font-weight: 800;
-      letter-spacing: -0.01em;
-      text-transform: uppercase;
-      color: var(--black);
-      line-height: 1.2;
-    }
-
-    .preview-box__price {
-      font-size: 0.75rem;
-      font-weight: 400;
-      color: var(--grey-dark);
-    }
-
-    .preview-box__variant {
-      font-size: 0.65rem;
-      color: var(--grey-mid);
-      margin-top: 2px;
-    }
-
-    /* No item state */
-    .no-item-state {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 16px;
-      padding: 32px 0;
-    }
-
-    .no-item-state p {
-      font-size: 0.75rem;
-      color: var(--grey-mid);
-      line-height: 1.7;
-    }
+    .order-page { min-height: calc(100vh - 64px); display: grid; grid-template-columns: 1fr 1fr; }
+    .order-left { background: var(--grey-light); padding: 64px 56px; display: flex; flex-direction: column; gap: 32px; position: sticky; top: 64px; height: calc(100vh - 64px); overflow-y: auto; }
+    .order-left__label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey-mid); margin-bottom: 16px; }
+    .cart-items-list { display: flex; flex-direction: column; gap: 16px; }
+    
+    /* ── PRODUCT PREVIEW CARDS ── */
+    .preview-box { background: var(--white); border: 1px solid var(--grey-light); display: flex; align-items: stretch; }
+    .preview-box__img-wrap { width: 80px; aspect-ratio: 3 / 4; background: #f0f0f0; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border-right: 1px solid var(--grey-light); }
+    .preview-box__img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .preview-box__img-placeholder { font-size: 0.45rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey-mid); text-align: center; padding: 8px; }
+    .preview-box__body { padding: 16px 20px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex-grow: 1; }
+    .preview-box__category { font-size: 0.55rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey-mid); line-height: 1; }
+    .preview-box__title { font-size: 0.85rem; font-weight: 800; letter-spacing: -0.01em; text-transform: uppercase; color: var(--black); line-height: 1.2; }
+    .preview-box__price { font-size: 0.75rem; font-weight: 400; color: var(--grey-dark); }
+    .preview-box__variant { font-size: 0.65rem; color: var(--grey-mid); margin-top: 2px; }
+    .no-item-state { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding: 32px 0; }
+    .no-item-state p { font-size: 0.75rem; color: var(--grey-mid); line-height: 1.7; }
 
     /* ── RIGHT — ORDER FORM ── */
-    .order-right {
-      padding: 64px 56px;
-      background: var(--white);
-    }
-
-    .order-form__header {
-      margin-bottom: 48px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid var(--grey-light);
-    }
-
-    .order-form__section {
-      margin-bottom: 40px;
-    }
-
-    .order-form__section-title {
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--grey-mid);
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--grey-light);
-    }
-
-    .form-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    /* Payment badge */
-    .payment-badge {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px 20px;
-      border: 1px solid var(--grey-light);
-      background: var(--white);
-    }
-
-    .payment-badge__icon {
-      font-size: 1.2rem;
-    }
-
-    .payment-badge__text {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .payment-badge__label {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .payment-badge__sub {
-      font-size: 0.7rem;
-      color: var(--grey-mid);
-    }
-
-    /* Submit area */
-    .order-submit {
-      margin-top: 40px;
-      padding-top: 32px;
-      border-top: 1px solid var(--grey-light);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .order-submit__note {
-      font-size: 0.62rem;
-      color: var(--grey-mid);
-      line-height: 1.7;
-      text-align: center;
-    }
-
-    /* Order total line */
-    .order-total-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 0;
-      border-top: 1px solid var(--grey-light);
-      border-bottom: 1px solid var(--grey-light);
-      margin-bottom: 8px;
-    }
-
-    .order-total-row__label {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--grey-mid);
-    }
-
-    .order-total-row__value {
-      font-size: 1.1rem;
-      font-weight: 800;
-      letter-spacing: -0.01em;
-    }
-
-    /* Loading state on button */
-    .btn--loading {
-      opacity: 0.7;
-      pointer-events: none;
-    }
+    .order-right { padding: 64px 56px; background: var(--white); }
+    .order-form__header { margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid var(--grey-light); }
+    .order-form__section { margin-bottom: 40px; }
+    .order-form__section-title { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--grey-mid); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--grey-light); }
+    .form-stack { display: flex; flex-direction: column; gap: 20px; }
+    .payment-badge { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border: 1px solid var(--grey-light); background: var(--white); }
+    .payment-badge__icon { font-size: 1.2rem; }
+    .payment-badge__text { display: flex; flex-direction: column; gap: 3px; }
+    .payment-badge__label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .payment-badge__sub { font-size: 0.7rem; color: var(--grey-mid); }
+    .order-submit { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--grey-light); display: flex; flex-direction: column; gap: 14px; }
+    .order-submit__note { font-size: 0.62rem; color: var(--grey-mid); line-height: 1.7; text-align: center; }
+    .order-total-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-top: 1px solid var(--grey-light); border-bottom: 1px solid var(--grey-light); margin-bottom: 8px; }
+    .order-total-row__label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--grey-mid); }
+    .order-total-row__value { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.01em; }
+    .btn--loading { opacity: 0.7; pointer-events: none; }
 
     /* ── SUCCESS OVERLAY ── */
-    #successOverlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1100;
-      background: var(--white);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 28px;
-      text-align: center;
-      padding: 48px 24px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-    }
+    #successOverlay { position: fixed; inset: 0; z-index: 1100; background: var(--white); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; text-align: center; padding: 48px 24px; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+    #successOverlay.open { opacity: 1; pointer-events: all; }
+    .success-line { width: 48px; height: 2px; background: var(--black); margin: 0 auto; }
 
-    #successOverlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .success-line {
-      width: 48px;
-      height: 2px;
-      background: var(--black);
-      margin: 0 auto;
-    }
-
-    /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      .order-page {
-        grid-template-columns: 1fr;
-      }
-
-      .order-left {
-        position: static;
-        height: auto;
-        padding: 40px 24px;
-      }
-
-      .order-right {
-        padding: 40px 24px;
-      }
+      .order-page { grid-template-columns: 1fr; }
+      .order-left { position: static; height: auto; padding: 40px 24px; }
+      .order-right { padding: 40px 24px; }
     }
   </style>
 </head>
@@ -300,9 +60,7 @@
   <header></header>
   <script src="header.js" defer></script>
 
-  <!-- ════════════════════════════════════
-       SUCCESS OVERLAY
-  ════════════════════════════════════ -->
+  <!-- SUCCESS OVERLAY -->
   <div id="successOverlay" aria-live="polite">
     <div class="success-line"></div>
     <div>
@@ -312,117 +70,65 @@
     <p style="font-size: 0.8rem; color: var(--grey-mid); max-width: 360px; line-height: 1.8;">
       Your order has been received. We'll contact you on the number you provided to confirm delivery details.
     </p>
-    <div style="font-size: 0.62rem; font-weight: 700; letter-spacing: 0.2em;
-                text-transform: uppercase; color: var(--grey-mid);
-                border: 1px solid var(--grey-light); padding: 14px 32px;"
-         id="orderRef">
+    <div style="font-size: 0.62rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey-mid); border: 1px solid var(--grey-light); padding: 14px 32px;" id="orderRef">
       Order Reference: —
     </div>
-    <a href="shop.html" class="btn btn-primary" id="backToShopBtn" style="margin-top: 8px;">
-      ← Back to Shop
-    </a>
+    <a href="shop.html" class="btn btn-primary" id="backToShopBtn" style="margin-top: 8px;">← Back to Shop</a>
     <div class="success-line"></div>
   </div>
 
-  <!-- ════════════════════════════════════
-       ORDER PAGE
-  ════════════════════════════════════ -->
+  <!-- ORDER PAGE MAIN CONTAINER -->
   <div class="order-page">
-
-    <!-- ── LEFT COLUMN (SUMMARY BREAKDOWN) ── -->
+    <!-- LEFT COLUMN: SUMMARY BREAKDOWN -->
     <div class="order-left">
-
-      <!-- No item fallback -->
       <div id="noItemState" class="no-item-state" style="display: none;">
         <p class="order-left__label">Your Order</p>
         <p>Your bag is currently empty.<br/>Please browse the shop and add products to your cart.</p>
         <a href="shop.html" class="btn btn-outline" style="margin-top: 8px;">← Go to Shop</a>
       </div>
 
-      <!-- Multi-Item Preview Section Wrapper -->
       <div id="previewSection" style="display: none;">
         <p class="order-left__label">Items In Your Bag</p>
-        <div id="cartItemsContainer" class="cart-items-list">
-          <!-- Populated Dynamically via Javascript Engine -->
-        </div>
+        <div id="cartItemsContainer" class="cart-items-list"></div>
       </div>
-
     </div>
 
-    <!-- ── RIGHT COLUMN (SHIPPING CHECKOUT) ── -->
+    <!-- RIGHT COLUMN: SHIPPING CHECKOUT -->
     <div class="order-right">
-
       <div class="order-form__header">
         <p class="t-subheading">Checkout</p>
         <h1 class="t-heading" style="margin-top: 8px;">Shipping Details</h1>
       </div>
 
       <form id="orderForm" novalidate>
-
-        <!-- CUSTOMER INFO -->
         <div class="order-form__section">
           <p class="order-form__section-title">Customer Information</p>
           <div class="form-stack">
-
             <div class="form-group">
               <label class="form-label" for="fieldName">Full Name <span>* required</span></label>
-              <input
-                class="form-input"
-                type="text"
-                id="fieldName"
-                name="name"
-                placeholder="e.g. Rafi Hossain"
-                autocomplete="name"
-                required
-              />
+              <input class="form-input" type="text" id="fieldName" name="name" placeholder="e.g. Rafi Hossain" autocomplete="name" required />
               <span class="form-error-msg" id="nameError">Please enter your full name.</span>
             </div>
 
             <div class="form-group">
-              <label class="form-label" for="fieldPhone">
-                Phone Number <span>* required — 01XXXXXXXXX</span>
-              </label>
-              <input
-                class="form-input"
-                type="tel"
-                id="fieldPhone"
-                name="phone"
-                placeholder="01XXXXXXXXX"
-                maxlength="11"
-                autocomplete="tel"
-                required
-              />
-              <span class="form-error-msg" id="phoneError">
-                Enter a valid Bangladeshi number (11 digits, starts with 01).
-              </span>
+              <label class="form-label" for="fieldPhone">Phone Number <span>* required — 01XXXXXXXXX</span></label>
+              <input class="form-input" type="tel" id="fieldPhone" name="phone" placeholder="01XXXXXXXXX" maxlength="11" autocomplete="tel" required />
+              <span class="form-error-msg" id="phoneError">Enter a valid Bangladeshi number (11 digits, starts with 01).</span>
             </div>
-
           </div>
         </div>
 
-        <!-- DELIVERY ADDRESS -->
         <div class="order-form__section">
           <p class="order-form__section-title">Delivery Address</p>
           <div class="form-stack">
-
             <div class="form-group">
               <label class="form-label" for="fieldAddress">Full Address <span>* required</span></label>
-              <input
-                class="form-input"
-                type="text"
-                id="fieldAddress"
-                name="address"
-                placeholder="House/Flat, Road, Area, City"
-                autocomplete="street-address"
-                required
-              />
+              <input class="form-input" type="text" id="fieldAddress" name="address" placeholder="House/Flat, Road, Area, City" autocomplete="street-address" required />
               <span class="form-error-msg" id="addressError">Please enter your delivery address.</span>
             </div>
-
           </div>
         </div>
 
-        <!-- PAYMENT METHOD -->
         <div class="order-form__section">
           <p class="order-form__section-title">Payment Method</p>
           <div class="payment-badge">
@@ -434,7 +140,6 @@
           </div>
         </div>
 
-        <!-- PRICE BREAKDOWN -->
         <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; font-size: 0.7rem; color: var(--grey-dark); padding-top: 8px;">
           <div style="display: flex; justify-content: space-between;">
             <span style="text-transform: uppercase; letter-spacing: 0.1em; color: var(--grey-mid);">Items Subtotal:</span>
@@ -442,29 +147,20 @@
           </div>
           <div style="display: flex; justify-content: space-between;">
             <span style="text-transform: uppercase; letter-spacing: 0.1em; color: var(--grey-mid);">Delivery Charge (Flat Rate):</span>
-            <span id="deliveryChargeLabel" style="font-weight: 700; color: var(--black);">130 BDT</span>
+            <span style="font-weight: 700; color: var(--black);">130 BDT</span>
           </div>
         </div>
 
-        <!-- ORDER TOTAL -->
         <div class="order-total-row">
           <span class="order-total-row__label">Total To Pay</span>
           <span class="order-total-row__value" id="orderTotal">—</span>
         </div>
 
-        <!-- SUBMIT -->
         <div class="order-submit">
-          <button type="submit" class="btn btn-primary btn-full" id="submitBtn">
-            Place Order
-          </button>
-          <p class="order-submit__note">
-            By placing your order, you agree to be contacted for delivery confirmation.
-            Cash on delivery only.
-          </p>
+          <button type="submit" class="btn btn-primary btn-full" id="submitBtn">Place Order</button>
+          <p class="order-submit__note">By placing your order, you agree to be contacted for delivery confirmation. Cash on delivery only.</p>
         </div>
-
       </form>
-
     </div>
   </div>
 
@@ -472,188 +168,84 @@
 (function () {
   'use strict';
 
-  // ── GOOGLE SHEETS CONFIG ─────────────────────────────
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyEs1LonUY1kfpmZrOBzQxbcHy4aAKt3QNy-qAoI-P4FRRkANaWLHK4v8NZagWnEM7xzA/exec";
-  const DELIVERY_CHARGE = 130; // Unconditional Nationwide Flat Rate
-  // ────────────────────────────────────────────────────
-
+  const DELIVERY_CHARGE = 130;
   const fmt = window.ZEEDO?.formatPrice ?? (v => parseInt(v).toLocaleString('en-BD') + ' BDT');
   let currentCart = [];
 
-  function loadCartItems() {
-    try {
-      const raw = localStorage.getItem('ZEEDO_CART');
-      if (!raw) return [];
-      return JSON.parse(raw) || [];
-    } catch {
-      return [];
-    }
+  const fields = [
+    { id: 'fieldName', errorId: 'nameError', check: v => v.trim() !== '' },
+    { id: 'fieldPhone', errorId: 'phoneError', check: v => /^01\d{9}$/.test(v.trim()) },
+    { id: 'fieldAddress', errorId: 'addressError', check: v => v.trim() !== '' }
+  ];
+
+  function toggleError(id, errorId, show) {
+    document.getElementById(id).classList.toggle('error', show);
+    document.getElementById(errorId).classList.toggle('visible', show);
   }
 
-  // ── LIVE INVOICE TRACKING ENGINE ───────────────────────
   function processInvoice() {
     if (currentCart.length === 0) {
-      showNoItem();
+      document.getElementById('previewSection').style.display = 'none';
+      document.getElementById('noItemState').style.display = 'block';
+      document.getElementById('orderSubtotal').textContent = '—';
+      document.getElementById('orderTotal').textContent = '—';
       return;
     }
-
-    let subtotal = 0;
-    currentCart.forEach(item => {
-      subtotal += parseInt(item.price || 0) * parseInt(item.quantity || 1);
-    });
-
-    const finalTotal = subtotal + DELIVERY_CHARGE;
-
+    const subtotal = currentCart.reduce((sum, item) => sum + parseInt(item.price || 0) * parseInt(item.quantity || 1), 0);
     document.getElementById('orderSubtotal').textContent = fmt(subtotal);
-    document.getElementById('orderTotal').textContent = fmt(finalTotal);
-    
+    document.getElementById('orderTotal').textContent = fmt(subtotal + DELIVERY_CHARGE);
     document.getElementById('previewSection').style.display = 'block';
-    document.getElementById('noItemState').style.display    = 'none';
+    document.getElementById('noItemState').style.display = 'none';
   }
 
   function renderCartSummary() {
-    const container = document.getElementById('cartItemsContainer');
-    container.innerHTML = '';
-
-    currentCart.forEach(item => {
-      const box = document.createElement('div');
-      box.className = 'preview-box';
-
-      // Horizontal Product Layout Thumbnail Context Builder
-      const imgWrap = document.createElement('div');
-      imgWrap.className = 'preview-box__img-wrap';
-      
-      if (item.image && item.image.trim() !== '') {
-        const img = document.createElement('img');
-        img.src = item.image;
-        img.alt = item.title;
-        imgWrap.appendChild(img);
-      } else {
-        imgWrap.innerHTML = `<p class="preview-box__img-placeholder">Photo Coming Soon</p>`;
-      }
-
-      const body = document.createElement('div');
-      body.className = 'preview-box__body';
-      body.innerHTML = `
-        <p class="preview-box__category">${item.category || 'Collection'}</p>
-        <p class="preview-box__title">${item.title || 'Product Item'}</p>
-        <p class="preview-box__price">${item.quantity}x &nbsp;•&nbsp; ${fmt(item.price)}</p>
-        <p class="preview-box__variant">Variant: <strong>${item.color || 'Default'}</strong></p>
-      `;
-
-      box.appendChild(imgWrap);
-      box.appendChild(body);
-      container.appendChild(box);
-    });
-
+    document.getElementById('cartItemsContainer').innerHTML = currentCart.map(item => `
+      <div class="preview-box">
+        <div class="preview-box__img-wrap">
+          ${item.image && item.image.trim() !== '' ? `<img src="${item.image}" alt="${item.title}">` : `<p class="preview-box__img-placeholder">Photo Coming Soon</p>`}
+        </div>
+        <div class="preview-box__body">
+          <p class="preview-box__category">${item.category || 'Collection'}</p>
+          <p class="preview-box__title">${item.title || 'Product Item'}</p>
+          <p class="preview-box__price">${item.quantity}x &nbsp;•&nbsp; ${fmt(item.price)}</p>
+          <p class="preview-box__variant">Variant: <strong>${item.color || 'Default'}</strong></p>
+        </div>
+      </div>
+    `).join('');
     processInvoice();
   }
 
-  function showNoItem() {
-    document.getElementById('previewSection').style.display = 'none';
-    document.getElementById('noItemState').style.display    = 'block';
-    document.getElementById('orderSubtotal').textContent    = '—';
-    document.getElementById('orderTotal').textContent       = '—';
-  }
+  // Initial cart evaluation
+  try {
+    currentCart = JSON.parse(localStorage.getItem('ZEEDO_CART')) || [];
+  } catch { currentCart = []; }
+  currentCart.length > 0 ? renderCartSummary() : processInvoice();
 
-  // Initial Orchestration Load
-  currentCart = loadCartItems();
-  if (currentCart && currentCart.length > 0) {
-    renderCartSummary();
-  } else {
-    showNoItem();
-  }
-
-  // ── INPUT FIELDS VALIDATION ENGINE ───────────────────
-  function showError(id, msgId) {
-    document.getElementById(id).classList.add('error');
-    document.getElementById(msgId).classList.add('visible');
-  }
-
-  function clearError(id, msgId) {
-    document.getElementById(id).classList.remove('error');
-    document.getElementById(msgId).classList.remove('visible');
-  }
-
-  function validatePhone(val) {
-    return /^01\d{9}$/.test(val.trim());
-  }
-
-  function validateForm() {
-    let valid = true;
-
-    const name = document.getElementById('fieldName').value.trim();
-    if (!name) {
-      showError('fieldName', 'nameError');
-      valid = false;
-    } else {
-      clearError('fieldName', 'nameError');
-    }
-
-    const phone = document.getElementById('fieldPhone').value.trim();
-    if (!validatePhone(phone)) {
-      showError('fieldPhone', 'phoneError');
-      valid = false;
-    } else {
-      clearError('fieldPhone', 'phoneError');
-    }
-
-    const address = document.getElementById('fieldAddress').value.trim();
-    if (!address) {
-      showError('fieldAddress', 'addressError');
-      valid = false;
-    } else {
-      clearError('fieldAddress', 'addressError');
-    }
-
-    return valid;
-  }
-
-  // Instant Visual blur loops
-  document.getElementById('fieldName').addEventListener('blur', () => {
-    const v = document.getElementById('fieldName').value.trim();
-    v ? clearError('fieldName','nameError') : showError('fieldName','nameError');
+  // Unified dynamic inline field verification loops
+  fields.forEach(f => {
+    document.getElementById(f.id).addEventListener('blur', function() {
+      toggleError(f.id, f.errorId, !f.check(this.value));
+    });
   });
-
-  document.getElementById('fieldPhone').addEventListener('blur', () => {
-    const v = document.getElementById('fieldPhone').value.trim();
-    validatePhone(v) ? clearError('fieldPhone','phoneError') : showError('fieldPhone','phoneError');
-  });
-
-  document.getElementById('fieldAddress').addEventListener('blur', () => {
-    const v = document.getElementById('fieldAddress').value.trim();
-    v ? clearError('fieldAddress','addressError') : showError('fieldAddress','addressError');
-  });
-
-  // ── ACTION RESPONSE VIEW OVERLAYS ──────────────────
-  function showSuccess(orderRef) {
-    document.getElementById('orderRef').textContent = 'Order Reference: ' + orderRef;
-    document.getElementById('successOverlay').classList.add('open');
-    
-    // Purge cart completely out of global memory context
-    localStorage.removeItem('ZEEDO_CART');
-    
-    // Announce clean-slate reset updates back upstream to any header/badge instances
-    window.dispatchEvent(new Event('cartUpdated'));
-    if (typeof window.updateCartCount === 'function') {
-      window.updateCartCount();
-    }
-  }
 
   document.getElementById('backToShopBtn').addEventListener('click', () => {
     document.getElementById('successOverlay').classList.remove('open');
   });
 
-  // ── FORM DATA SUBMISSION HANDLER ─────────────────────
+  // Data processing and remote ingestion request lifecycle handler
   document.getElementById('orderForm').addEventListener('submit', async function (e) {
     e.preventDefault();
+    if (currentCart.length === 0) return alert("Your cart is empty. Please select products before placing an order.");
 
-    if (currentCart.length === 0) {
-      alert("Your cart is empty. Please select products before placing an order.");
-      return;
-    }
+    let isValid = true;
+    fields.forEach(f => {
+      const fieldValid = f.check(document.getElementById(f.id).value);
+      toggleError(f.id, f.errorId, !fieldValid);
+      if (!fieldValid) isValid = false;
+    });
 
-    if (!validateForm()) {
+    if (!isValid) {
       const firstErr = document.querySelector('.form-input.error');
       if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
@@ -663,54 +255,42 @@
     submitBtn.textContent = 'Placing Order…';
     submitBtn.classList.add('btn--loading');
 
-    // Aggregate subtotal tracking strings
-    let totalItemsPrice = 0;
-    currentCart.forEach(item => {
-      totalItemsPrice += parseInt(item.price || 0) * parseInt(item.quantity || 1);
-    });
+    const totalItemsPrice = currentCart.reduce((sum, item) => sum + parseInt(item.price || 0) * parseInt(item.quantity || 1), 0);
     const finalInvoiceAmount = totalItemsPrice + DELIVERY_CHARGE;
 
-    // Secure smart-formatting backup payload structure mapping multi-item sets perfectly into standard rows
     const payload = {
       timestamp: new Date().toLocaleString('en-BD', { timeZone: 'Asia/Dhaka' }),
-      name:      document.getElementById('fieldName').value.trim(),
-      phone:     document.getElementById('fieldPhone').value.trim(),
-      address:   document.getElementById('fieldAddress').value.trim(),
-      
-      // Collapses arrays using uniform text serialization strings safely
-      product:   currentCart.map(i => `${i.title} (${i.quantity}x)`).join(', '),
-      category:  [...new Set(currentCart.map(i => i.category || 'Watches'))].join(', '),
-      color:     currentCart.map(i => i.color || 'Default').join(', '),
-      quantity:  currentCart.reduce((acc, i) => acc + parseInt(i.quantity || 1), 0).toString(),
-      total:     fmt(finalInvoiceAmount),
-      
-      // Complete transparent historical string sequence mapping logs safely for target sheet records
-      price:     currentCart.map(i => `${i.quantity}x ${i.title} [${i.color || 'Default'}] (${fmt(i.price)})`).join(' + ') + ` + 130 Delivery = ${fmt(finalInvoiceAmount)}`,
-      payment:   'Cash on Delivery',
+      name: document.getElementById('fieldName').value.trim(),
+      phone: document.getElementById('fieldPhone').value.trim(),
+      address: document.getElementById('fieldAddress').value.trim(),
+      product: currentCart.map(i => `${i.title} (${i.quantity}x)`).join(', '),
+      category: [...new Set(currentCart.map(i => i.category || 'Watches'))].join(', '),
+      color: currentCart.map(i => i.color || 'Default').join(', '),
+      quantity: currentCart.reduce((acc, i) => acc + parseInt(i.quantity || 1), 0).toString(),
+      total: fmt(finalInvoiceAmount),
+      price: currentCart.map(i => `${i.quantity}x ${i.title} [${i.color || 'Default'}] (${fmt(i.price)})`).join(' + ') + ` + 130 Delivery = ${fmt(finalInvoiceAmount)}`,
+      payment: 'Cash on Delivery',
     };
 
     const orderRef = 'ZD-' + Date.now().toString(36).toUpperCase().slice(-6);
 
     try {
       if (SCRIPT_URL !== "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
-        await fetch(SCRIPT_URL, {
-          method:  'POST',
-          mode:    'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify(payload),
-        });
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       }
-      showSuccess(orderRef);
+      document.getElementById('orderRef').textContent = 'Order Reference: ' + orderRef;
+      document.getElementById('successOverlay').classList.add('open');
+      localStorage.removeItem('ZEEDO_CART');
+      window.dispatchEvent(new Event('cartUpdated'));
+      if (typeof window.updateCartCount === 'function') window.updateCartCount();
     } catch (err) {
-      console.error('[order.js] Submission tracking fault:', err);
+      console.error('[order.js] Tracking error:', err);
       submitBtn.textContent = 'Try Again';
       submitBtn.classList.remove('btn--loading');
       alert('Something went wrong. Please check your network connection and try again.');
     }
   });
-
 })();
 </script>
-
 </body>
 </html>
