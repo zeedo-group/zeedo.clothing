@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZEEDO — Wear The Drop.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --off-black: #0f0f0f;
+    --surface: #141414;
+    --surface2: #1c1c1c;
+    --border: #252525;
+    --muted: #444;
+    --text-dim: #888;
+    --text: #c8c8c8;
+    --white: #f0ede8;
+    --accent: #e8d5a3;
+    --accent2: #c4a96a;
+    --red: #c94040;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ── HEADER ── */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px;
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 0.12em;
+    color: var(--white);
+  }
+  .logo span { color: var(--accent); }
+
+  .header-right {
+    display: flex; align-items: center; gap: 32px;
+  }
+
+  .scarcity-badge {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    border: 1px solid var(--accent2);
+    padding: 5px 12px;
+    text-transform: uppercase;
+    animation: pulse-border 3s ease infinite;
+  }
+
+  @keyframes pulse-border {
+    0%, 100% { border-color: var(--accent2); }
+    50% { border-color: var(--accent); box-shadow: 0 0 8px rgba(232,213,163,0.2); }
+  }
+
+  .cart-btn {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; letter-spacing: 0.1em;
+    color: var(--text); cursor: pointer;
+    background: var(--surface2); border: 1px solid var(--border);
+    padding: 8px 16px;
+    transition: all 0.2s;
+  }
+  .cart-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .cart-count {
+    background: var(--accent); color: var(--black);
+    font-size: 10px; font-weight: 500;
+    width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── CATEGORY NAV STRIP ── */
+  .cat-strip {
+    position: fixed; top: 61px; left: 0; right: 0; z-index: 99;
+    background: var(--off-black);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto; overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cat-strip::-webkit-scrollbar { display: none; }
+
+  .cat-inner {
+    display: flex; align-items: center;
+    padding: 0 40px; gap: 0;
+    white-space: nowrap; min-width: max-content;
+  }
+
+  .cat-link {
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-dim); padding: 14px 20px;
+    border-right: 1px solid var(--border);
+    transition: all 0.2s;
+    position: relative;
+  }
+  .cat-link:first-child { border-left: 1px solid var(--border); }
+  .cat-link::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px; background: var(--accent);
+    transform: scaleX(0); transition: transform 0.2s;
+  }
+  .cat-link:hover { color: var(--white); }
+  .cat-link:hover::after { transform: scaleX(1); }
+
+  /* ── MAIN CONTENT ── */
+  main { padding-top: 115px; }
+
+  /* ── HERO ── */
+  .hero {
+    display: grid; grid-template-columns: 1fr 1fr;
+    min-height: calc(100vh - 115px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-left {
+    padding: 80px 60px 80px 40px;
+    display: flex; flex-direction: column; justify-content: center;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .hero-season {
+    font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 40px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-season::before {
+    content: ''; display: inline-block;
+    width: 30px; height: 1px; background: var(--accent);
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 9vw, 130px);
+    line-height: 0.9;
+    color: var(--white);
+    letter-spacing: 0.02em;
+    margin-bottom: 40px;
+  }
+  .hero-title em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--accent);
+    display: block;
+    font-size: 0.65em;
+    line-height: 1.1;
+  }
+
+  .hero-sub {
+    font-size: 12px; line-height: 1.8;
+    color: var(--text-dim); max-width: 380px;
+    margin-bottom: 48px;
+  }
+
+  .hero-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--accent); color: var(--black);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 14px 32px; border: none; cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .btn-primary:hover { background: var(--white); transform: translateY(-1px); }
+
+  .btn-ghost {
+    background: transparent; color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 13px 32px; border: 1px solid var(--border); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--text); color: var(--white); }
+
+  .hero-stats {
+    display: flex; gap: 40px; margin-top: 60px;
+    padding-top: 40px; border-top: 1px solid var(--border);
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; color: var(--white); line-height: 1;
+  }
+  .stat-label {
+    font-size: 9px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* ── HERO RIGHT ── */
+  .hero-right {
+    position: relative; overflow: hidden;
+    background: var(--surface);
+  }
+
+  .hero-img-container {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .hero-img-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, var(--surface) 0%, #1a1a1a 40%, #111 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px;
+  }
+
+  .placeholder-cross {
+    width: 120px; height: 120px; position: relative; opacity: 0.15;
+  }
+  .placeholder-cross::before, .placeholder-cross::after {
+    content: ''; position: absolute;
+    background: var(--accent);
+  }
+  .placeholder-cross::before { width: 100%; height: 1px; top: 50%; left: 0; }
+  .placeholder-cross::after { width: 1px; height: 100%; top: 0; left: 50%; }
+
+  .hero-drop-tag {
+    position: absolute; top: 32px; left: 32px;
+    background: var(--red); color: var(--white);
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 6px 14px;
+  }
+
+  .hero-corner-text {
+    position: absolute; bottom: 32px; right: 32px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-size: 15px;
+    color: var(--accent); opacity: 0.6;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── FEATURED DROPS GRID ── */
+  .section { padding: 80px 40px; }
+
+  .section-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--border); padding-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px; color: var(--white); letter-spacing: 0.05em;
+  }
+  .section-title span { color: var(--accent); }
+
+  .section-meta {
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  /* ── PRODUCT GRID ── */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .product-card {
+    background: var(--off-black);
+    display: flex; flex-direction: column;
+    cursor: pointer; overflow: hidden;
+    transition: background 0.2s;
+  }
+  .product-card:hover { background: var(--surface); }
+  .product-card:hover .product-img-wrap img,
+  .product-card:hover .product-img-wrap .img-ph { transform: scale(1.03); }
+
+  .product-img-wrap {
+    aspect-ratio: 3/4; overflow: hidden; position: relative;
+    background: var(--surface);
+  }
+  .product-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.5s ease;
+    display: block;
+  }
+  .img-ph {
+    width: 100%; height: 100%;
+    background: linear-gradient(160deg, var(--surface) 0%, var(--surface2) 100%);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.5s ease;
+  }
+  .img-ph-inner {
+    width: 60px; height: 60px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 22px;
+  }
+
+  .product-tag {
+    position: absolute; top: 14px; left: 14px;
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 4px 10px;
+  }
+  .tag-new { background: var(--accent); color: var(--black); }
+  .tag-limited { background: var(--red); color: var(--white); }
+  .tag-sold { background: var(--muted); color: var(--white); }
+
+  .product-info {
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    flex: 1; display: flex; flex-direction: column;
+  }
+  .product-cat {
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 8px;
+  }
+  .product-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; color: var(--white);
+    line-height: 1.3; margin-bottom: 14px; flex: 1;
+  }
+  .product-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: auto;
+  }
+  .product-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; color: var(--accent); letter-spacing: 0.05em;
+  }
+  .product-price sub { font-size: 12px; font-family: 'DM Mono', monospace; }
+
+  .add-btn {
+    width: 36px; height: 36px; border: 1px solid var(--border);
+    background: transparent; color: var(--text-dim);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s; font-size: 18px;
+  }
+  .add-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(232,213,163,0.05); }
+
+  /* ── LIFESTYLE GRID ── */
+  .lifestyle-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 1px;
+  }
+
+  .ls-block {
+    background: var(--off-black);
+    overflow: hidden;
+    position: relative;
+  }
+  .ls-block-inner {
+    padding: 32px; height: 100%;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    min-height: 200px;
+  }
+
+  .ls-block:nth-child(1) { grid-column: span 5; grid-row: span 2; }
+  .ls-block:nth-child(2) { grid-column: span 4; }
+  .ls-block:nth-child(3) { grid-column: span 3; }
+  .ls-block:nth-child(4) { grid-column: span 4; }
+  .ls-block:nth-child(5) { grid-column: span 3; }
+  .ls-block:nth-child(6) { grid-column: span 12; }
+
+  .ls-tag {
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 12px;
+  }
+  .ls-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; color: var(--white); line-height: 1.2;
+  }
+  .ls-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; color: var(--accent);
+    margin-top: 16px;
+  }
+  .ls-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--surface) 0%, var(--off-black) 100%);
+    opacity: 0.4;
+  }
+  .ls-block:hover .ls-bg { opacity: 0.6; }
+  .ls-block .ls-block-inner { position: relative; z-index: 1; }
+
+  /* Wide banner block */
+  .ls-block:nth-child(6) .ls-block-inner {
+    flex-direction: row; align-items: center; justify-content: space-between;
+    min-height: 100px;
+  }
+  .ls-block:nth-child(6) .ls-title { font-size: 32px; }
+
+  /* ── VALUE ROW ── */
+  .value-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .value-item {
+    padding: 48px 40px;
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .value-item:last-child { border-right: none; }
+
+  .value-icon {
+    font-size: 28px; color: var(--accent);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.05em;
+  }
+  .value-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px; color: var(--white); letter-spacing: 0.05em;
+  }
+  .value-desc {
+    font-size: 11px; line-height: 1.8; color: var(--text-dim);
+    max-width: 280px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 32px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 0.12em; color: var(--white);
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-copy {
+    font-size: 10px; letter-spacing: 0.1em;
+    color: var(--text-dim);
+  }
+  .footer-tagline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* ── CART SIDEBAR ── */
+  .cart-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    display: none; align-items: stretch;
+  }
+  .cart-overlay.open { display: flex; }
+
+  .cart-backdrop {
+    flex: 1; background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+  }
+
+  .cart-panel {
+    width: 420px; background: var(--off-black);
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    animation: slideInRight 0.3s ease;
+  }
+  @keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  .cart-header {
+    padding: 24px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cart-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px; color: var(--white); letter-spacing: 0.05em;
+  }
+  .close-btn {
+    background: none; border: none; color: var(--text-dim);
+    cursor: pointer; font-size: 20px; padding: 4px;
+    transition: color 0.2s;
+  }
+  .close-btn:hover { color: var(--white); }
+
+  .cart-items { flex: 1; overflow-y: auto; padding: 16px; }
+  .cart-empty {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; height: 200px; gap: 12px;
+    color: var(--text-dim);
+  }
+  .cart-empty-icon { font-size: 40px; opacity: 0.2; }
+
+  .cart-item {
+    display: flex; gap: 14px; padding: 14px;
+    border: 1px solid var(--border); margin-bottom: 8px;
+    background: var(--surface);
+  }
+  .cart-item-img {
+    width: 70px; height: 90px; background: var(--surface2);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 20px;
+  }
+  .cart-item-info { flex: 1; }
+  .cart-item-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px; color: var(--white); margin-bottom: 4px;
+  }
+  .cart-item-meta { font-size: 10px; color: var(--text-dim); margin-bottom: 10px; }
+  .cart-item-footer {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cart-item-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; color: var(--accent);
+  }
+  .qty-controls {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .qty-btn {
+    width: 24px; height: 24px; border: 1px solid var(--border);
+    background: none; color: var(--text); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; transition: all 0.2s;
+  }
+  .qty-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .qty-num { font-size: 12px; min-width: 20px; text-align: center; }
+
+  .cart-footer { padding: 20px; border-top: 1px solid var(--border); }
+  .cart-total-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .cart-total-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+  .cart-total-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; color: var(--white);
+  }
+  .cart-delivery { font-size: 10px; color: var(--text-dim); margin-bottom: 16px; }
+  .checkout-btn {
+    display: block; width: 100%; padding: 16px;
+    background: var(--accent); color: var(--black);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    border: none; cursor: pointer; text-align: center;
+    font-weight: 500; transition: all 0.2s;
+  }
+  .checkout-btn:hover { background: var(--white); }
+  .checkout-btn:disabled { background: var(--muted); cursor: not-allowed; color: var(--text-dim); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--surface2); border: 1px solid var(--accent);
+    color: var(--white); padding: 12px 24px;
+    font-size: 11px; letter-spacing: 0.1em; z-index: 300;
+    transition: transform 0.3s ease;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    header { padding: 16px 20px; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { padding: 48px 20px; border-right: none; }
+    .cat-inner { padding: 0 20px; }
+    .section { padding: 48px 20px; }
+    .value-row { grid-template-columns: 1fr; }
+    .value-item { border-right: none; border-bottom: 1px solid var(--border); padding: 32px 20px; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+    .lifestyle-grid { grid-template-columns: 1fr 1fr; }
+    .ls-block:nth-child(1),
+    .ls-block:nth-child(2),
+    .ls-block:nth-child(3),
+    .ls-block:nth-child(4),
+    .ls-block:nth-child(5),
+    .ls-block:nth-child(6) { grid-column: span 1; grid-row: span 1; }
+    .cart-panel { width: 100%; }
+  }
+
+  /* Page load animation */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-season { animation: fadeUp 0.6s ease 0.1s both; }
+  .hero-title { animation: fadeUp 0.6s ease 0.2s both; }
+  .hero-sub { animation: fadeUp 0.6s ease 0.3s both; }
+  .hero-actions { animation: fadeUp 0.6s ease 0.4s both; }
+  .hero-stats { animation: fadeUp 0.6s ease 0.5s both; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="home_2.html" class="logo">ZEE<span>DO</span></a>
+  <div class="header-right">
+    <span class="scarcity-badge">No Restocks. Ever.</span>
+    <button class="cart-btn" onclick="openCart()">
+      <span>Cart</span>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- CATEGORY NAV STRIP -->
+<nav class="cat-strip">
+  <div class="cat-inner">
+    <a class="cat-link" href="#t-shirts">T-Shirts</a>
+    <a class="cat-link" href="#shirts">Shirts</a>
+    <a class="cat-link" href="#trousers">Trousers</a>
+    <a class="cat-link" href="#shoes">Shoes</a>
+    <a class="cat-link" href="#watches">Watches</a>
+    <a class="cat-link" href="#perfumes">Perfumes</a>
+    <a class="cat-link" href="#accessories">More Accessories</a>
+  </div>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-season">SS / 2025 — Limited Collection</div>
+      <h1 class="hero-title">
+        Wear<br>The<br>
+        <em>Drop.</em>
+      </h1>
+      <p class="hero-sub">
+        Ultra-premium streetwear for those who move first.
+        Each piece is a one-time release — when it's gone, it's gone for good.
+      </p>
+      <div class="hero-actions">
+        <a href="#t-shirts" class="btn-primary">Shop Now</a>
+        <button class="btn-ghost">View Lookbook</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num">47</div>
+          <div class="stat-label">Active Drops</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">0</div>
+          <div class="stat-label">Restocks</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">130৳</div>
+          <div class="stat-label">Flat Delivery</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-img-container">
+        <div class="hero-img-placeholder">
+          <div class="placeholder-cross"></div>
+        </div>
+      </div>
+      <div class="hero-drop-tag">New Drop</div>
+      <div class="hero-corner-text">Season 2025</div>
+    </div>
+  </section>
+
+  <!-- T-SHIRTS -->
+  <section class="section" id="t-shirts">
+    <div class="section-header">
+      <h2 class="section-title">T-<span>Shirts</span></h2>
+      <span class="section-meta">8 items · Limited Stock</span>
+    </div>
+    <div class="product-grid" id="tshirt-grid"></div>
+  </section>
+
+  <!-- SHIRTS -->
+  <section class="section" id="shirts" style="padding-top:0">
+    <div class="section-header">
+      <h2 class="section-title"><span>Shirts</span></h2>
+      <span class="section-meta">5 items · Limited Stock</span>
+    </div>
+    <div class="product-grid" id="shirts-grid"></div>
+  </section>
+
+  <!-- LIFESTYLE GRID -->
+  <section class="section" id="accessories" style="padding-top:0">
+    <div class="section-header">
+      <h2 class="section-title">Home <span>Drops</span></h2>
+      <span class="section-meta">Rugs · Collectibles · Room Accents</span>
+    </div>
+    <div class="lifestyle-grid">
+      <div class="ls-block">
+        <div class="ls-bg"></div>
+        <div class="ls-block-inner">
+          <div class="ls-tag">Premium Rug</div>
+          <div class="ls-title">Monochrome Loop Pile</div>
+          <div class="ls-price">4,200 ৳</div>
+        </div>
+      </div>
+      <div class="ls-block">
+        <div class="ls-bg"></div>
+        <div class="ls-block-inner">
+          <div class="ls-tag">Collectible</div>
+          <div class="ls-title">Ceramic Drop Object No.3</div>
+          <div class="ls-price">1,800 ৳</div>
+        </div>
+      </div>
+      <div class="ls-block">
+        <div class="ls-bg"></div>
+        <div class="ls-block-inner">
+          <div class="ls-tag">Accent</div>
+          <div class="ls-title">Obsidian Tray Set</div>
+          <div class="ls-price">2,100 ৳</div>
+        </div>
+      </div>
+      <div class="ls-block">
+        <div class="ls-bg"></div>
+        <div class="ls-block-inner">
+          <div class="ls-tag">Collectible</div>
+          <div class="ls-title">Art Print — Series I</div>
+          <div class="ls-price">950 ৳</div>
+        </div>
+      </div>
+      <div class="ls-block">
+        <div class="ls-bg"></div>
+        <div class="ls-block-inner">
+          <div class="ls-tag">Incense</div>
+          <div class="ls-title">Dark Cedar & Oud</div>
+          <div class="ls-price">680 ৳</div>
+        </div>
+      </div>
+      <div class="ls-block">
+        <div class="ls-bg"></div>
+        <div class="ls-block-inner">
+          <div class="ls-tag">Bundle</div>
+          <div class="ls-title">The Curator's Room Kit</div>
+          <button class="btn-ghost" style="margin-top:0;padding:10px 20px;font-size:10px">Shop Bundle</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WATCHES + PERFUMES side by side -->
+  <section class="section" id="watches" style="padding-top:0">
+    <div class="section-header">
+      <h2 class="section-title">Watches & <span>Perfumes</span></h2>
+      <span class="section-meta">Select Drops</span>
+    </div>
+    <div class="product-grid" id="luxe-grid"></div>
+  </section>
+
+  <!-- VALUE ROW -->
+  <div class="value-row">
+    <div class="value-item">
+      <div class="value-icon">COD</div>
+      <div class="value-title">Cash on Delivery</div>
+      <div class="value-desc">Pay when your order arrives at your door. No cards, no digital payments — full trust, full control.</div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">↯</div>
+      <div class="value-title">Limited Drops</div>
+      <div class="value-desc">Every item is a one-time release. No restocks, no second chances. Order before it's gone forever.</div>
+    </div>
+    <div class="value-item">
+      <div class="value-icon">~30s</div>
+      <div class="value-title">30-Second Order</div>
+      <div class="value-desc">Name, number, address — that's all we need. Our team calls to confirm before we ship.</div>
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ZEE<span>DO</span></div>
+  <div class="footer-copy">© 2025 ZEEDO Clothing, Dhaka, Bangladesh. All rights reserved.</div>
+  <div class="footer-tagline">New drops. No restocks. Order before it's gone.</div>
+</footer>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay" id="cartOverlay">
+  <div class="cart-backdrop" onclick="closeCart()"></div>
+  <div class="cart-panel">
+    <div class="cart-header">
+      <div class="cart-title">Your Cart</div>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">
+        <div class="cart-empty-icon">○</div>
+        <span>Your cart is empty</span>
+      </div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span class="cart-total-label">Subtotal</span>
+        <span class="cart-total-val" id="cartSubtotal">0 ৳</span>
+      </div>
+      <div class="cart-total-row">
+        <span class="cart-total-label">Delivery</span>
+        <span style="font-size:14px; color: var(--text)">130 ৳</span>
+      </div>
+      <div class="cart-delivery" id="cartTotalLine">Add items to see total</div>
+      <a href="order.html" id="checkoutBtn">
+        <button class="checkout-btn" id="checkoutBtnInner" disabled>Proceed to Checkout</button>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── PRODUCT DATA ──
+  const PRODUCTS = [
+    // T-Shirts
+    { id: 'ts1', name: 'Monochrome Oversized Tee', cat: 'T-Shirts', color: 'Washed Black', price: 890, tag: 'new', grid: 'tshirt-grid' },
+    { id: 'ts2', name: 'Brushstroke Graphic Tee', cat: 'T-Shirts', color: 'Cream', price: 950, tag: 'limited', grid: 'tshirt-grid' },
+    { id: 'ts3', name: 'Noise Texture Drop Tee', cat: 'T-Shirts', color: 'Slate Grey', price: 1100, tag: 'new', grid: 'tshirt-grid' },
+    { id: 'ts4', name: 'Void Series Longsleeve', cat: 'T-Shirts', color: 'Jet Black', price: 1300, tag: null, grid: 'tshirt-grid' },
+
+    // Shirts
+    { id: 'sh1', name: 'Linen Overshirt — Ghost', cat: 'Shirts', color: 'Off-White', price: 2200, tag: 'limited', grid: 'shirts-grid' },
+    { id: 'sh2', name: 'Satin Club Collar Shirt', cat: 'Shirts', color: 'Ivory', price: 1900, tag: 'new', grid: 'shirts-grid' },
+    { id: 'sh3', name: 'Camp Collar Print Shirt', cat: 'Shirts', color: 'Multi', price: 1750, tag: null, grid: 'shirts-grid' },
+
+    // Watches & Perfumes
+    { id: 'wt1', name: 'Field Watch — Obsidian', cat: 'Watches', color: 'Black/Silver', price: 6800, tag: 'limited', grid: 'luxe-grid' },
+    { id: 'pf1', name: 'Oud & Vetiver Parfum', cat: 'Perfumes', color: 'Amber Bottle', price: 3200, tag: 'new', grid: 'luxe-grid' },
+    { id: 'pf2', name: 'Cold Cedar EDP', cat: 'Perfumes', color: 'Smoke Bottle', price: 2900, tag: null, grid: 'luxe-grid' },
+  ];
+
+  // ── CART STATE ──
+  let cart = JSON.parse(localStorage.getItem('ZEEDO_CART') || '[]');
+
+  function saveCart() {
+    localStorage.setItem('ZEEDO_CART', JSON.stringify(cart));
+    updateCartUI();
+  }
+
+  function addToCart(product) {
+    const existing = cart.find(i => i.id === product.id);
+    if (existing) { existing.qty += 1; }
+    else { cart.push({ ...product, qty: 1 }); }
+    saveCart();
+    showToast(`${product.name} added to cart`);
+  }
+
+  function updateQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+    saveCart();
+  }
+
+  function updateCartUI() {
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const count = cart.reduce((s, i) => s + i.qty, 0);
+    document.getElementById('cartCount').textContent = count;
+    document.getElementById('cartSubtotal').textContent = total.toLocaleString('en-BD') + ' ৳';
+    const checkBtn = document.getElementById('checkoutBtnInner');
+    if (total > 0) {
+      document.getElementById('cartTotalLine').textContent = `Total with delivery: ${(total + 130).toLocaleString('en-BD')} ৳`;
+      checkBtn.disabled = false;
+    } else {
+      document.getElementById('cartTotalLine').textContent = 'Add items to see total';
+      checkBtn.disabled = true;
+    }
+
+    const itemsEl = document.getElementById('cartItems');
+    if (cart.length === 0) {
+      itemsEl.innerHTML = '<div class="cart-empty"><div class="cart-empty-icon">○</div><span>Your cart is empty</span></div>';
+      return;
+    }
+    itemsEl.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-item-img">◻</div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-meta">${item.cat} · ${item.color}</div>
+          <div class="cart-item-footer">
+            <div class="cart-item-price">${(item.price * item.qty).toLocaleString('en-BD')} ৳</div>
+            <div class="qty-controls">
+              <button class="qty-btn" onclick="updateQty('${item.id}', -1)">−</button>
+              <span class="qty-num">${item.qty}</span>
+              <button class="qty-btn" onclick="updateQty('${item.id}', 1)">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── RENDER PRODUCTS ──
+  function renderGrid(containerId, products) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    el.innerHTML = products.map(p => `
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <div class="img-ph">
+            <div class="img-ph-inner">◻</div>
+          </div>
+          ${p.tag ? `<span class="product-tag ${p.tag === 'new' ? 'tag-new' : p.tag === 'limited' ? 'tag-limited' : 'tag-sold'}">${p.tag === 'new' ? 'New Drop' : p.tag === 'limited' ? 'Limited' : 'Sold Out'}</span>` : ''}
+        </div>
+        <div class="product-info">
+          <div class="product-cat">${p.cat}</div>
+          <div class="product-name">${p.name}</div>
+          <div class="product-footer">
+            <div class="product-price">${p.price.toLocaleString('en-BD')} <sub>৳</sub></div>
+            <button class="add-btn" onclick='addToCart(${JSON.stringify(p)})' title="Add to cart">+</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // group products by grid target
+  const grids = {};
+  PRODUCTS.forEach(p => {
+    if (!grids[p.grid]) grids[p.grid] = [];
+    grids[p.grid].push(p);
+  });
+  Object.entries(grids).forEach(([id, products]) => renderGrid(id, products));
+
+  // ── CART OPEN/CLOSE ──
+  function openCart() { document.getElementById('cartOverlay').classList.add('open'); }
+  function closeCart() { document.getElementById('cartOverlay').classList.remove('open'); }
+
+  // ── TOAST ──
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // Init UI
+  updateCartUI();
+</script>
+</body>
+</html>
