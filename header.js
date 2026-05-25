@@ -1,5 +1,5 @@
 /**
- * ZEEDO CLOTHING — Shared Header Injector v4 (Cart Drawer Fixed)
+ * ZEEDO CLOTHING — Shared Header Injector v5 (Cart Drawer + styles.css)
  *
  * Injects:
  *   1. Universal top header (logo left, nav center, search+cart right)
@@ -8,6 +8,7 @@
  *
  * Usage: <script src="header.js" defer></script>
  * Requires an empty <header></header> tag on every page.
+ * Drawer styling must be defined in styles.css
  */
 
 (function () {
@@ -36,6 +37,7 @@
     'more-accessories.html',
   ];
 
+  // Price formatter
   function formatPrice(raw) {
     const num = parseInt(raw, 10);
     if (isNaN(num)) return raw;
@@ -44,6 +46,7 @@
   window.ZEEDO = window.ZEEDO || {};
   window.ZEEDO.formatPrice = formatPrice;
 
+  // Cart count updater
   function updateHeaderCartCount() {
     const countBadge = document.getElementById('cart-count');
     if (!countBadge) return;
@@ -64,6 +67,7 @@
     return file || 'home.html';
   }
 
+  // Build header
   function buildTopHeader(activePage) {
     const navHTML = NAV_LINKS.map(link => {
       const active = activePage === link.href ? 'active' : '';
@@ -115,6 +119,7 @@
     `;
   }
 
+  // Inject drawer at end of body
   function injectCartDrawer() {
     if (document.getElementById('cart-drawer')) return;
     const drawer = document.createElement('div');
@@ -155,6 +160,7 @@
     bindCartDrawerEvents();
   }
 
+  // Drawer events
   function bindCartDrawerEvents() {
     const cartBtn = document.querySelector('.header-cart');
     const drawer = document.getElementById('cart-drawer');
