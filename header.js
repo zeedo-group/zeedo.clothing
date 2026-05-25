@@ -1,10 +1,13 @@
 /**
  * ZEEDO clothing — Global Header & Slide-Out Cart Engine
+ * Handled entirely via vanilla JS for zero configuration plug-and-play operation.
  */
 (function () {
   'use strict';
 
+  // 1. INJECT MANDATORY CORE HEADER & DRAWER CSS
   const styles = `
+    /* Header layout overrides */
     header {
       position: sticky;
       top: 0;
@@ -128,7 +131,7 @@
       color: var(--grey-mid, #7c7c7c);
     }
     
-    /* Single Cart Item */
+    /* Single Cart Item Display Card */
     .cart-item {
       display: flex;
       gap: 16px;
@@ -171,19 +174,16 @@
       font-weight: 700;
       margin-top: 2px;
     }
-    .cart-item__cancel-btn {
+    .cart-item__remove-btn {
       background: none;
       border: none;
-      font-size: 0.58rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-size: 0.75rem;
       color: var(--grey-mid, #7c7c7c);
       cursor: pointer;
-      padding: 6px 0;
+      padding: 8px;
       transition: color 0.2s ease;
     }
-    .cart-item__cancel-btn:hover {
+    .cart-item__remove-btn:hover {
       color: #ff3333;
     }
     
@@ -215,12 +215,18 @@
   styleSheet.innerText = styles;
   document.head.appendChild(styleSheet);
 
+  // 2. INITIALIZE GLOBAL NAMESPACE OBJECT
   window.ZEEDO = window.ZEEDO || {};
+  
+  // Clean monetary printing formatter matching shop parameters
   window.ZEEDO.formatPrice = window.ZEEDO.formatPrice || function (val) {
     return parseInt(val).toLocaleString('en-BD') + ' BDT';
   };
 
+  // 3. GENERATE DOM COMPONENT LAYOUTS
   document.addEventListener("DOMContentLoaded", function () {
+    
+    // Inject semantic content layout inside parent <header> wrapper tags found on host documents
     const headerElement = document.querySelector('header');
     if (headerElement) {
       headerElement.innerHTML = `
@@ -239,6 +245,7 @@
       `;
     }
 
+    // Append Slide-out Cart Drawer to base body layer to circumvent local element clipping properties
     const drawerContainer = document.createElement('div');
     drawerContainer.id = 'globalCartDrawerOverlay';
     drawerContainer.className = 'cart-drawer-overlay';
@@ -248,27 +255,31 @@
           <h3 class="cart-drawer__title">Your Selection</h3>
           <button class="cart-drawer__close" id="globalCartClose" aria-label="Close Drawer">✕</button>
         </div>
-        <div class="cart-drawer__items" id="globalCartItemsWrapper"></div>
+        <div class="cart-drawer__items" id="globalCartItemsWrapper">
+          <!-- Live items systematically loaded here -->
+        </div>
         <div class="cart-drawer__footer" id="globalCartFooter">
           <div class="cart-drawer__summary-row">
             <span class="cart-drawer__summary-label">Subtotal</span>
             <span class="cart-drawer__summary-value" id="globalCartSubtotal">0 BDT</span>
           </div>
-          <a href="order.html" class="btn btn-primary btn-full" style="text-align:center; text-decoration:none; display:block;">Place Order</a>
+          <a href="order.html" class="btn btn-primary btn-full" style="text-align:center; text-decoration:none; display:block;">Proceed to Checkout</a>
         </div>
       </div>
     `;
     document.body.appendChild(drawerContainer);
 
+    // Set high-contrast link coloring base status context indicators
     const currentFile = window.location.pathname.split("/").pop();
     document.querySelectorAll('.header-nav a').forEach(link => {
       if(link.getAttribute('href') === currentFile) link.classList.add('active');
     });
 
+    // 4. BIND MECHANICAL INTERACTION TRIGGER EVENT LISTENERS
     const overlay = document.getElementById('globalCartDrawerOverlay');
     
     function openDrawer() {
-      window.ZEEDO.renderCartItems();
+      window.ZEEDO.renderCartItems(); // Keep fresh on layout pop
       overlay.classList.add('is-active');
       document.body.style.overflow = 'hidden';
     }
@@ -280,8 +291,13 @@
 
     document.getElementById('globalCartTrigger').addEventListener('click', openDrawer);
     document.getElementById('globalCartClose').addEventListener('click', closeDrawer);
-    overlay.addEventListener('click', function(e) { if (e.target === this) closeDrawer(); });
+    overlay.addEventListener('click', function(e) {
+      if (e.target === this) closeDrawer();
+    });
 
+    // 5. WIRE ENGINE WORKFLOW ROUTINES
+    
+    // Updates shopping icon indicator badge numbers globally
     window.ZEEDO.updateCartCount = function () {
       const cart = JSON.parse(localStorage.getItem('ZEEDO_CART')) || [];
       const totalCount = cart.reduce((total, item) => total + item.quantity, 0);
@@ -289,6 +305,7 @@
       if (countBadge) countBadge.textContent = totalCount;
     };
 
+    // Renders list items dynamically inside the drawer interface panel
     window.ZEEDO.renderCartItems = function () {
       const wrapper = document.getElementById('globalCartItemsWrapper');
       const footerPanel = document.getElementById('globalCartFooter');
@@ -303,28 +320,35 @@
       }
 
       if (footerPanel) footerPanel.style.display = 'block';
-      wrapper.innerHTML = '';
+      wrapper.innerHTML = ''; // Wipe existing structures
 
       let calculatedSubtotal = 0;
 
       cart.forEach(item => {
         calculatedSubtotal += (parseInt(item.price) * item.quantity);
+
         const itemCard = document.createElement('div');
         itemCard.className = 'cart-item';
 
+        // Evaluate visual product representation settings
         let imageMarkup = `<div style="width:100%;height:100%;background:#f0f0f0;"></div>`;
         if (item.image && item.image.trim() !== '') {
           imageMarkup = `<img src="${item.image.split(',')[0].trim()}" alt="${item.title}">`;
         }
 
         itemCard.innerHTML = `
-          <div class="cart-item__img-wrap">${imageMarkup}</div>
+          <div class="cart-item__img-wrap">
+            ${imageMarkup}
+          </div>
           <div class="cart-item__details">
             <h4 class="cart-item__title">${item.title}</h4>
             <p class="cart-item__meta">Variant: ${item.color}</p>
             <p class="cart-item__price-qty">${item.quantity} × ${window.ZEEDO.formatPrice(item.price)}</p>
-            <div><button class="cart-item__cancel-btn" onclick="globalRemoveCartItem('${item.id}', '${item.color}')">Cancel</button></div>
           </div>
+          <button class="cart-item__remove-btn" 
+                  onclick="globalRemoveCartItem('${item.id}', '${item.color}')" 
+                  aria-label="Remove item">✕</button>
+        </div>
         `;
         wrapper.appendChild(itemCard);
       });
@@ -332,20 +356,20 @@
       document.getElementById('globalCartSubtotal').textContent = window.ZEEDO.formatPrice(calculatedSubtotal);
     };
 
+    // Initial system load run state validation checks
     window.ZEEDO.updateCartCount();
-    
-    // Listen for outside page updates to sync drawer numbers automatically
-    window.addEventListener('cartUpdated', () => {
-      window.ZEEDO.updateCartCount();
-      window.ZEEDO.renderCartItems();
-    });
   });
 
+  // 6. GLOBAL VISUAL ITEM REMOVAL DISPATCH TRIGGER
   window.globalRemoveCartItem = function (id, color) {
     let cart = JSON.parse(localStorage.getItem('ZEEDO_CART')) || [];
+    
+    // Sift configuration out of system array variables
     cart = cart.filter(item => !(item.id === id && item.color === color));
+    
     localStorage.setItem('ZEEDO_CART', JSON.stringify(cart));
     
+    // Broadcast live layout refresh commands seamlessly
     window.ZEEDO.updateCartCount();
     window.ZEEDO.renderCartItems();
     window.dispatchEvent(new Event('cartUpdated'));
