@@ -20,7 +20,7 @@
       padding: 64px 56px;
       display: flex;
       flex-direction: column;
-      gap: 48px;
+      gap: 32px;
       position: sticky;
       top: 64px;
       height: calc(100vh - 64px);
@@ -33,24 +33,35 @@
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--grey-mid);
+      margin-bottom: 16px;
     }
 
-    /* Product Preview Box */
+    /* Multi-Item Cart List Layout Container */
+    .cart-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Horizontal Card Item Layout Row */
     .preview-box {
       background: var(--white);
       border: 1px solid var(--grey-light);
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
+      align-items: stretch;
     }
 
     .preview-box__img-wrap {
-      width: 100%;
+      width: 80px;
       aspect-ratio: 3 / 4;
       background: #f0f0f0;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
+      border-right: 1px solid var(--grey-light);
     }
 
     .preview-box__img-wrap img {
@@ -60,21 +71,22 @@
     }
 
     .preview-box__img-placeholder {
-      font-size: 0.6rem;
+      font-size: 0.45rem;
       font-weight: 700;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--grey-mid);
       text-align: center;
-      padding: 24px;
+      padding: 8px;
     }
 
     .preview-box__body {
-      padding: 20px 24px 24px;
-      border-top: 1px solid var(--grey-light);
+      padding: 16px 20px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      justify-content: center;
+      gap: 4px;
+      flex-grow: 1;
     }
 
     .preview-box__category {
@@ -83,29 +95,28 @@
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--grey-mid);
+      line-height: 1;
     }
 
     .preview-box__title {
-      font-size: 1rem;
+      font-size: 0.85rem;
       font-weight: 800;
       letter-spacing: -0.01em;
       text-transform: uppercase;
       color: var(--black);
-      line-height: 1.15;
+      line-height: 1.2;
     }
 
     .preview-box__price {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       font-weight: 400;
       color: var(--grey-dark);
-      margin-top: 2px;
     }
 
-    /* Color dropdown on left side */
-    .color-section {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    .preview-box__variant {
+      font-size: 0.65rem;
+      color: var(--grey-mid);
+      margin-top: 2px;
     }
 
     /* No item state */
@@ -237,7 +248,6 @@
     }
 
     /* ── SUCCESS OVERLAY ── */
-    /* (Inherits from styles.css .success-overlay) */
     #successOverlay {
       position: fixed;
       inset: 0;
@@ -292,7 +302,6 @@
 
   <!-- ════════════════════════════════════
        SUCCESS OVERLAY
-       Shown after Google Sheets POST succeeds
   ════════════════════════════════════ -->
   <div id="successOverlay" aria-live="polite">
     <div class="success-line"></div>
@@ -309,8 +318,7 @@
          id="orderRef">
       Order Reference: —
     </div>
-    <a href="shop.html" class="btn btn-primary" id="backToShopBtn"
-       style="margin-top: 8px;">
+    <a href="shop.html" class="btn btn-primary" id="backToShopBtn" style="margin-top: 8px;">
       ← Back to Shop
     </a>
     <div class="success-line"></div>
@@ -321,51 +329,27 @@
   ════════════════════════════════════ -->
   <div class="order-page">
 
-    <!-- ── LEFT COLUMN ── -->
+    <!-- ── LEFT COLUMN (SUMMARY BREAKDOWN) ── -->
     <div class="order-left">
 
       <!-- No item fallback -->
       <div id="noItemState" class="no-item-state" style="display: none;">
         <p class="order-left__label">Your Order</p>
-        <p>No product selected.<br/>Please browse the shop and tap <strong>Order Now</strong> on a product.</p>
+        <p>Your bag is currently empty.<br/>Please browse the shop and add products to your cart.</p>
         <a href="shop.html" class="btn btn-outline" style="margin-top: 8px;">← Go to Shop</a>
       </div>
 
-      <!-- Product Preview (shown when item exists in localStorage) -->
+      <!-- Multi-Item Preview Section Wrapper -->
       <div id="previewSection" style="display: none;">
-        <p class="order-left__label">You're Ordering</p>
-
-        <div class="preview-box">
-          <div class="preview-box__img-wrap" id="previewImgWrap">
-            <p class="preview-box__img-placeholder" id="previewPlaceholder">Photo Coming Soon</p>
-          </div>
-          <div class="preview-box__body">
-            <p class="preview-box__category" id="previewCategory">—</p>
-            <p class="preview-box__title"    id="previewTitle">—</p>
-            <p class="preview-box__price"    id="previewPrice">—</p>
-          </div>
+        <p class="order-left__label">Items In Your Bag</p>
+        <div id="cartItemsContainer" class="cart-items-list">
+          <!-- Populated Dynamically via Javascript Engine -->
         </div>
-
-        <!-- Color dropdown — required, dynamic from data-colors -->
-        <div class="color-section">
-          <div class="form-group">
-            <label class="form-label" for="colorSelect">
-              Color <span>* required</span>
-            </label>
-            <div class="select-wrap">
-              <select class="form-select" id="colorSelect" required>
-                <option value="">Select a color</option>
-              </select>
-            </div>
-            <span class="form-error-msg" id="colorError">Please select a color.</span>
-          </div>
-        </div>
-
       </div>
 
     </div>
 
-    <!-- ── RIGHT COLUMN ── -->
+    <!-- ── RIGHT COLUMN (SHIPPING CHECKOUT) ── -->
     <div class="order-right">
 
       <div class="order-form__header">
@@ -438,24 +422,7 @@
           </div>
         </div>
 
-        <!-- QUANTITY SELECTION -->
-<div class="order-form__section">
-  <p class="order-form__section-title">Quantity</p>
-  <div class="form-group">
-    <label class="form-label" for="fieldQuantity">Select Quantity</label>
-    <div class="select-wrap">
-      <select class="form-select" id="fieldQuantity">
-        <option value="1" selected>1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-    </div>
-  </div>
-</div>
-
-        <!-- PAYMENT -->
+        <!-- PAYMENT METHOD -->
         <div class="order-form__section">
           <p class="order-form__section-title">Payment Method</p>
           <div class="payment-badge">
@@ -468,24 +435,22 @@
         </div>
 
         <!-- PRICE BREAKDOWN -->
-<div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; font-size: 0.7rem; color: var(--grey-dark); padding-top: 8px;">
-  <div style="display: flex; justify-content: space-between;">
-    <span style="text-transform: uppercase; letter-spacing: 0.1em; color: var(--grey-mid);">Items Subtotal:</span>
-    <span id="orderSubtotal" style="font-weight: 700; color: var(--black);">—</span>
-  </div>
-  <div style="display: flex; justify-content: space-between;">
-    <span style="text-transform: uppercase; letter-spacing: 0.1em; color: var(--grey-mid);">Delivery Charge (Flat Rate):</span>
-    <span style="font-weight: 700; color: var(--black);">130 BDT</span>
-  </div>
-</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; font-size: 0.7rem; color: var(--grey-dark); padding-top: 8px;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="text-transform: uppercase; letter-spacing: 0.1em; color: var(--grey-mid);">Items Subtotal:</span>
+            <span id="orderSubtotal" style="font-weight: 700; color: var(--black);">—</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="text-transform: uppercase; letter-spacing: 0.1em; color: var(--grey-mid);">Delivery Charge (Flat Rate):</span>
+            <span id="deliveryChargeLabel" style="font-weight: 700; color: var(--black);">130 BDT</span>
+          </div>
+        </div>
 
-<!-- ORDER TOTAL -->
-<div class="order-total-row">
-  <span class="order-total-row__label">Total To Pay</span>
-  <span class="order-total-row__value" id="orderTotal">—</span>
-</div>
-
-     
+        <!-- ORDER TOTAL -->
+        <div class="order-total-row">
+          <span class="order-total-row__label">Total To Pay</span>
+          <span class="order-total-row__value" id="orderTotal">—</span>
+        </div>
 
         <!-- SUBMIT -->
         <div class="order-submit">
@@ -513,69 +478,75 @@
   // ────────────────────────────────────────────────────
 
   const fmt = window.ZEEDO?.formatPrice ?? (v => parseInt(v).toLocaleString('en-BD') + ' BDT');
+  let currentCart = [];
 
-  let checkoutItem = null;
-
-  function loadCheckoutItem() {
+  function loadCartItems() {
     try {
-      const raw = localStorage.getItem('ZEEDO_CHECKOUT_ITEM');
-      if (!raw) return null;
-      return JSON.parse(raw);
+      const raw = localStorage.getItem('ZEEDO_CART');
+      if (!raw) return [];
+      return JSON.parse(raw) || [];
     } catch {
-      return null;
+      return [];
     }
   }
 
-  // ── LIVE INVOICE ENGINE ──────────────────────────────
-  function calculateInvoice() {
-    if (!checkoutItem) return;
-
-    const basePrice = parseInt(checkoutItem.price || 0);
-    const quantity = parseInt(document.getElementById('fieldQuantity').value || 1);
-    
-    const subtotal = basePrice * quantity;
-    const finalTotal = subtotal + DELIVERY_CHARGE;
-
-    // Display updates
-    document.getElementById('orderSubtotal').textContent = fmt(subtotal);
-    document.getElementById('orderTotal').textContent = fmt(finalTotal);
-  }
-
-  function populatePreview(item) {
-    document.getElementById('previewCategory').textContent = item.category || '—';
-    document.getElementById('previewTitle').textContent    = item.title    || '—';
-    document.getElementById('previewPrice').textContent    = fmt(item.price);
-
-    // Run pricing computation on load
-    calculateInvoice();
-
-    // Image
-    const imgWrap = document.getElementById('previewImgWrap');
-    if (item.image && item.image.trim() !== '') {
-      const img    = document.createElement('img');
-      img.src      = item.image;
-      img.alt      = item.title;
-      document.getElementById('previewPlaceholder').style.display = 'none';
-      imgWrap.insertBefore(img, imgWrap.firstChild);
+  // ── LIVE INVOICE TRACKING ENGINE ───────────────────────
+  function processInvoice() {
+    if (currentCart.length === 0) {
+      showNoItem();
+      return;
     }
 
-    // Color dropdown
-    const select = document.getElementById('colorSelect');
-    select.innerHTML = '<option value="">Select a color</option>';
-    const colors = (item.colors || 'Black').split(',');
-    colors.forEach(c => {
-      const opt   = document.createElement('option');
-      opt.value   = c.trim();
-      opt.textContent = c.trim();
-      select.appendChild(opt);
+    let subtotal = 0;
+    currentCart.forEach(item => {
+      subtotal += parseInt(item.price || 0) * parseInt(item.quantity || 1);
     });
 
-    if (item.selectedColor) {
-      select.value = item.selectedColor;
-    }
+    const finalTotal = subtotal + DELIVERY_CHARGE;
 
+    document.getElementById('orderSubtotal').textContent = fmt(subtotal);
+    document.getElementById('orderTotal').textContent = fmt(finalTotal);
+    
     document.getElementById('previewSection').style.display = 'block';
     document.getElementById('noItemState').style.display    = 'none';
+  }
+
+  function renderCartSummary() {
+    const container = document.getElementById('cartItemsContainer');
+    container.innerHTML = '';
+
+    currentCart.forEach(item => {
+      const box = document.createElement('div');
+      box.className = 'preview-box';
+
+      // Horizontal Product Layout Thumbnail Context Builder
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'preview-box__img-wrap';
+      
+      if (item.image && item.image.trim() !== '') {
+        const img = document.createElement('img');
+        img.src = item.image;
+        img.alt = item.title;
+        imgWrap.appendChild(img);
+      } else {
+        imgWrap.innerHTML = `<p class="preview-box__img-placeholder">Photo Coming Soon</p>`;
+      }
+
+      const body = document.createElement('div');
+      body.className = 'preview-box__body';
+      body.innerHTML = `
+        <p class="preview-box__category">${item.category || 'Collection'}</p>
+        <p class="preview-box__title">${item.title || 'Product Item'}</p>
+        <p class="preview-box__price">${item.quantity}x &nbsp;•&nbsp; ${fmt(item.price)}</p>
+        <p class="preview-box__variant">Variant: <strong>${item.color || 'Default'}</strong></p>
+      `;
+
+      box.appendChild(imgWrap);
+      box.appendChild(body);
+      container.appendChild(box);
+    });
+
+    processInvoice();
   }
 
   function showNoItem() {
@@ -585,18 +556,15 @@
     document.getElementById('orderTotal').textContent       = '—';
   }
 
-  // Init on page load
-  checkoutItem = loadCheckoutItem();
-  if (checkoutItem) {
-    populatePreview(checkoutItem);
+  // Initial Orchestration Load
+  currentCart = loadCartItems();
+  if (currentCart && currentCart.length > 0) {
+    renderCartSummary();
   } else {
     showNoItem();
   }
 
-  // Listen for quantity updates
-  document.getElementById('fieldQuantity').addEventListener('change', calculateInvoice);
-
-  // ── VALIDATION ───────────────────────────────────────
+  // ── INPUT FIELDS VALIDATION ENGINE ───────────────────
   function showError(id, msgId) {
     document.getElementById(id).classList.add('error');
     document.getElementById(msgId).classList.add('visible');
@@ -613,16 +581,6 @@
 
   function validateForm() {
     let valid = true;
-
-    const color = document.getElementById('colorSelect').value;
-    if (!color) {
-      document.getElementById('colorSelect').classList.add('error');
-      document.getElementById('colorError').classList.add('visible');
-      valid = false;
-    } else {
-      document.getElementById('colorSelect').classList.remove('error');
-      document.getElementById('colorError').classList.remove('visible');
-    }
 
     const name = document.getElementById('fieldName').value.trim();
     if (!name) {
@@ -651,7 +609,7 @@
     return valid;
   }
 
-  // Live input listening adjustments
+  // Instant Visual blur loops
   document.getElementById('fieldName').addEventListener('blur', () => {
     const v = document.getElementById('fieldName').value.trim();
     v ? clearError('fieldName','nameError') : showError('fieldName','nameError');
@@ -667,31 +625,36 @@
     v ? clearError('fieldAddress','addressError') : showError('fieldAddress','addressError');
   });
 
-  document.getElementById('colorSelect').addEventListener('change', () => {
-    const v = document.getElementById('colorSelect').value;
-    if (v) {
-      document.getElementById('colorSelect').classList.remove('error');
-      document.getElementById('colorError').classList.remove('visible');
-    }
-  });
-
-  // ── SUCCESS OVERLAY ──────────────────────────────────
+  // ── ACTION RESPONSE VIEW OVERLAYS ──────────────────
   function showSuccess(orderRef) {
     document.getElementById('orderRef').textContent = 'Order Reference: ' + orderRef;
     document.getElementById('successOverlay').classList.add('open');
-    localStorage.removeItem('ZEEDO_CHECKOUT_ITEM');
+    
+    // Purge cart completely out of global memory context
+    localStorage.removeItem('ZEEDO_CART');
+    
+    // Announce clean-slate reset updates back upstream to any header/badge instances
+    window.dispatchEvent(new Event('cartUpdated'));
+    if (typeof window.updateCartCount === 'function') {
+      window.updateCartCount();
+    }
   }
 
   document.getElementById('backToShopBtn').addEventListener('click', () => {
     document.getElementById('successOverlay').classList.remove('open');
   });
 
-  // ── FORM SUBMISSION ──────────────────────────────────
+  // ── FORM DATA SUBMISSION HANDLER ─────────────────────
   document.getElementById('orderForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
+    if (currentCart.length === 0) {
+      alert("Your cart is empty. Please select products before placing an order.");
+      return;
+    }
+
     if (!validateForm()) {
-      const firstErr = document.querySelector('.form-input.error, .form-select.error');
+      const firstErr = document.querySelector('.form-input.error');
       if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
@@ -700,23 +663,29 @@
     submitBtn.textContent = 'Placing Order…';
     submitBtn.classList.add('btn--loading');
 
-    const qty = document.getElementById('fieldQuantity').value;
-    const basePrice = parseInt(checkoutItem?.price || 0);
-    const totalPrice = (basePrice * parseInt(qty)) + DELIVERY_CHARGE;
+    // Aggregate subtotal tracking strings
+    let totalItemsPrice = 0;
+    currentCart.forEach(item => {
+      totalItemsPrice += parseInt(item.price || 0) * parseInt(item.quantity || 1);
+    });
+    const finalInvoiceAmount = totalItemsPrice + DELIVERY_CHARGE;
 
-    // Secure smart-formatting backup payload structure mapping your columns perfectly
+    // Secure smart-formatting backup payload structure mapping multi-item sets perfectly into standard rows
     const payload = {
       timestamp: new Date().toLocaleString('en-BD', { timeZone: 'Asia/Dhaka' }),
       name:      document.getElementById('fieldName').value.trim(),
       phone:     document.getElementById('fieldPhone').value.trim(),
       address:   document.getElementById('fieldAddress').value.trim(),
-      product:   checkoutItem?.title    ?? 'N/A',
-      category:  checkoutItem?.category ?? 'N/A',
-      color:     document.getElementById('colorSelect').value,
-      quantity:  qty,
-      total:     fmt(totalPrice),
-      // Appends complete order breakdown inside the "price" column safely so older sheets capture item count logs
-      price:     checkoutItem ? `${qty}x (${fmt(basePrice)}) + 130 Delivery = ${fmt(totalPrice)}` : 'N/A',
+      
+      // Collapses arrays using uniform text serialization strings safely
+      product:   currentCart.map(i => `${i.title} (${i.quantity}x)`).join(', '),
+      category:  [...new Set(currentCart.map(i => i.category || 'Watches'))].join(', '),
+      color:     currentCart.map(i => i.color || 'Default').join(', '),
+      quantity:  currentCart.reduce((acc, i) => acc + parseInt(i.quantity || 1), 0).toString(),
+      total:     fmt(finalInvoiceAmount),
+      
+      // Complete transparent historical string sequence mapping logs safely for target sheet records
+      price:     currentCart.map(i => `${i.quantity}x ${i.title} [${i.color || 'Default'}] (${fmt(i.price)})`).join(' + ') + ` + 130 Delivery = ${fmt(finalInvoiceAmount)}`,
       payment:   'Cash on Delivery',
     };
 
@@ -733,10 +702,10 @@
       }
       showSuccess(orderRef);
     } catch (err) {
-      console.error('[order.js] Submission error:', err);
+      console.error('[order.js] Submission tracking fault:', err);
       submitBtn.textContent = 'Try Again';
       submitBtn.classList.remove('btn--loading');
-      alert('Something went wrong. Please check your connection and try again.');
+      alert('Something went wrong. Please check your network connection and try again.');
     }
   });
 
