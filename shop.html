@@ -175,6 +175,9 @@
   <header></header>
   <script src="header.js" defer></script>
 
+  <!-- ══════════════════════════════════════
+       SHOP HERO
+  ══════════════════════════════════════ -->
   <section class="shop-hero">
     <div class="container">
       <div class="shop-hero__inner">
@@ -190,9 +193,16 @@
     </div>
   </section>
 
+  <!-- ══════════════════════════════════════
+       DYNAMIC CATEGORY SECTIONS
+       Built entirely by the shop engine below.
+       Body is intentionally blank here.
+  ══════════════════════════════════════ -->
   <main id="shopMain">
 
+    <!-- Skeleton shown while JS fetches category files -->
     <div id="shopSkeleton">
+      <!-- Repeat 3 skeleton blocks to fill the screen -->
       <div class="skeleton-section">
         <div class="container">
           <div class="skeleton-row">
@@ -229,13 +239,16 @@
 
   </main>
 
+  <!-- ══════════════════════════════════════
+       DETAILS MODAL
+  ══════════════════════════════════════ -->
   <div id="shopModal" aria-modal="true" role="dialog" aria-label="Product details">
     <div class="modal-box">
       <button class="modal-box__close" id="shopModalClose" aria-label="Close">✕</button>
 
       <div class="modal-box__image" style="position: relative;">
-        <button id="shopModalPrevBtn" class="gallery-arrow" style="display:none; position:absolute; left:12px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.85); border:none; width:28px; height:28px; font-weight:bold; cursor:pointer; font-size:0.75rem; z-index:10; border-radius:50%;">&lt;</button>
-        <button id="shopModalNextBtn" class="gallery-arrow" style="display:none; position:absolute; right:12px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.85); border:none; width:28px; height:28px; font-weight:bold; cursor:pointer; font-size:0.75rem; z-index:10; border-radius:50%;">&gt;</button>
+        <button id="shopModalPrevBtn" class="gallery-arrow" style="display:none; position:absolute; left:12px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.85); border:none; width:36px; height:36px; font-size:1rem; cursor:pointer; z-index:10;">←</button>
+        <button id="shopModalNextBtn" class="gallery-arrow" style="display:none; position:absolute; right:12px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.85); border:none; width:36px; height:36px; font-size:1rem; cursor:pointer; z-index:10;">→</button>
         <img id="shopModalImg" src="" alt="" style="display:none"/>
         <div id="shopModalPlaceholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--grey-light)">
           <span style="font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--grey-mid)">Photo Coming Soon</span>
@@ -265,6 +278,9 @@
     </div>
   </div>
 
+  <!-- ══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════ -->
   <footer class="site-footer">
     <div class="container">
       <div class="site-footer__inner">
@@ -274,6 +290,9 @@
     </div>
   </footer>
 
+  <!-- ══════════════════════════════════════
+       SHOP ENGINE
+  ══════════════════════════════════════ -->
   <script>
   (function () {
     'use strict';
@@ -282,6 +301,8 @@
     const MAX_PER_CATEGORY = 6; // Top 6 cards shown per category (2 rows × 3 cols)
 
     // Category list — order here = order on page
+    // label: display name in section header
+    // file:  the HTML file that IS the product database
     const CATEGORIES = [
       { file: 'tshirts.html',          label: 'T-Shirts' },
       { file: 'shirts.html',           label: 'Shirts' },
@@ -312,4 +333,309 @@
       document.getElementById('shopModalCategory').textContent = product.category;
 
       const imgEl      = document.getElementById('shopModalImg');
-      const placeholder= document.getElementById('shopModal
+      const placeholder= document.getElementById('shopModalPlaceholder');
+      const prevBtn    = document.getElementById('shopModalPrevBtn');
+      const nextBtn    = document.getElementById('shopModalNextBtn');
+
+      if (product.image && product.image.trim() !== '') {
+        shopModalImages = product.image.split(',').map(img => img.trim());
+        shopCurrentImgIndex = 0;
+
+        imgEl.src                 = shopModalImages[0];
+        imgEl.alt                 = product.title;
+        imgEl.style.display       = 'block';
+        placeholder.style.display = 'none';
+
+        if (shopModalImages.length > 1) {
+          prevBtn.style.display = 'block';
+          nextBtn.style.display = 'block';
+        } else {
+          prevBtn.style.display = 'none';
+          nextBtn.style.display = 'none';
+        }
+      } else {
+        shopModalImages = [];
+        imgEl.style.display       = 'none';
+        placeholder.style.display = 'flex';
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+      }
+
+      const select = document.getElementById('shopModalColor');
+      select.innerHTML = '<option value="">Select a color</option>';
+      select.classList.remove('error');
+      document.getElementById('shopModalColorError').classList.remove('visible');
+
+      product.colors.split(',').forEach(c => {
+        const opt       = document.createElement('option');
+        opt.value       = c.trim();
+        opt.textContent = c.trim();
+        select.appendChild(opt);
+      });
+
+      // Reset add to cart button text state on load
+      const cartBtn = document.getElementById('shopModalOrderBtn');
+      cartBtn.textContent = "Add to Cart";
+      cartBtn.disabled = false;
+
+      document.getElementById('shopModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    document.getElementById('shopModalPrevBtn').addEventListener('click', () => {
+      if (shopModalImages.length <= 1) return;
+      shopCurrentImgIndex = (shopCurrentImgIndex - 1 + shopModalImages.length) % shopModalImages.length;
+      updateShopModalImage();
+    });
+
+    document.getElementById('shopModalNextBtn').addEventListener('click', () => {
+      if (shopModalImages.length <= 1) return;
+      shopCurrentImgIndex = (shopCurrentImgIndex + 1) % shopModalImages.length;
+      updateShopModalImage();
+    });
+
+    function closeModal() {
+      document.getElementById('shopModal').classList.remove('open');
+      document.body.style.overflow = '';
+      activeProduct = null;
+    }
+
+    // ── MULTI-ITEM CART ARRAY STORAGE ENGINE ──────────────────
+    function commitToCart(productBundle) {
+      let cart = JSON.parse(localStorage.getItem('ZEEDO_CART')) || [];
+
+      // Check if product with identical ID and Color option is already queued
+      let identicalItem = cart.find(item => item.id === productBundle.id && item.color === productBundle.selectedColor);
+
+      if (identicalItem) {
+        identicalItem.quantity += 1;
+      } else {
+        cart.push({
+          id: productBundle.id,
+          title: productBundle.title,
+          price: parseInt(productBundle.price),
+          category: productBundle.category,
+          image: productBundle.image,
+          color: productBundle.selectedColor,
+          quantity: 1
+        });
+      }
+
+      localStorage.setItem('ZEEDO_CART', JSON.stringify(cart));
+
+      // Global notification event hook in case header widgets listen for live updates
+      window.dispatchEvent(new Event('cartUpdated'));
+      if (typeof window.updateCartCount === 'function') {
+        window.updateCartCount();
+      }
+    }
+
+    document.getElementById('shopModalOrderBtn').addEventListener('click', function() {
+      if (!activeProduct) return;
+      const select = document.getElementById('shopModalColor');
+      
+      if (!select.value) {
+        select.classList.add('error');
+        document.getElementById('shopModalColorError').classList.add('visible');
+        select.focus();
+        return;
+      }
+
+      this.textContent = "Added to Cart ✓";
+      this.disabled = true;
+
+      commitToCart({ 
+        ...activeProduct, 
+        image: shopModalImages[shopCurrentImgIndex] || '', 
+        selectedColor: select.value 
+      });
+
+      // Smooth premium delayed dismissal
+      setTimeout(closeModal, 600);
+    });
+
+    // Close triggers
+    document.getElementById('shopModalClose').addEventListener('click', closeModal);
+    document.getElementById('shopModalCloseBtn').addEventListener('click', closeModal);
+    document.getElementById('shopModal').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── FETCH & PARSE ────────────────────────────────────
+
+    async function fetchCategory(file) {
+      try {
+        const res  = await fetch(file);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const html = await res.text();
+        const doc  = new DOMParser().parseFromString(html, 'text/html');
+        const cards= [...doc.querySelectorAll('.product-card')];
+
+        return cards.slice(0, MAX_PER_CATEGORY).map(card => ({
+          id:       card.dataset.id       || '',
+          title:    card.dataset.title    || 'Untitled',
+          price:    card.dataset.price    || '0',
+          image:    card.dataset.image    || '',
+          colors:   card.dataset.colors   || 'Black',
+          category: card.dataset.category || 'Product',
+        }));
+      } catch (err) {
+        console.warn(`[shop.js] Could not load ${file}:`, err.message);
+        return [];
+      }
+    }
+
+    // ── BUILD CARD ───────────────────────────────────────
+
+    function buildCard(product) {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+
+      // Image wrap
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'product-card__image-wrap';
+
+     if (product.image && product.image.trim() !== '') {
+        const img   = document.createElement('img');
+        img.src     = product.image.split(',')[0].trim();
+        img.alt     = product.title;
+        img.loading = 'lazy';
+        imgWrap.appendChild(img);
+      } else {
+        imgWrap.setAttribute('data-placeholder', 'Photo Coming Soon');
+      }
+
+      // Body
+      const body = document.createElement('div');
+      body.className = 'product-card__body';
+      body.innerHTML = `
+        <p class="product-card__category">${product.category}</p>
+        <p class="product-card__title">${product.title}</p>
+        <p class="product-card__price">${fmt(product.price)}</p>
+        <div class="product-card__actions">
+          <button class="btn btn-primary details-btn">Details</button>
+          <button class="btn btn-outline order-btn">Order Now</button>
+        </div>
+      `;
+
+      card.appendChild(imgWrap);
+      card.appendChild(body);
+
+      // Click: Details → open modal
+      body.querySelector('.details-btn').addEventListener('click', () => openModal(product));
+
+      // Click: Order Now → open modal (color must be selected first)
+      body.querySelector('.order-btn').addEventListener('click', () => openModal(product));
+
+      return card;
+    }
+
+    // ── BUILD CATEGORY SECTION ───────────────────────────
+
+    function buildSection(catConfig, products) {
+      const section = document.createElement('section');
+      section.className = 'category-block';
+
+      const inner = document.createElement('div');
+      inner.className = 'container';
+
+      // ── HEADING ROW ──
+      // Category title: far left
+      // "view more ->": far right, points to the exact file
+      const row = document.createElement('div');
+      row.className = 'section-row';
+      row.innerHTML = `
+        <div class="section-row__left">
+          <p class="t-subheading">Zeedo Clothing</p>
+          <h2 class="t-heading" style="margin-top:5px">${catConfig.label}</h2>
+        </div>
+        <a href="${catConfig.file}" class="view-more">view more -&gt;</a>
+      `;
+
+      inner.appendChild(row);
+
+      // ── 3-COLUMN PRODUCT GRID (2 rows × 3 cards) ──
+      const grid = document.createElement('div');
+      grid.className = 'grid-3';
+
+      if (products.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'category-empty';
+        empty.textContent = 'Coming Soon — Products Being Added';
+        grid.appendChild(empty);
+      } else {
+        products.forEach(p => grid.appendChild(buildCard(p)));
+      }
+
+      inner.appendChild(grid);
+      section.appendChild(inner);
+      return section;
+    }
+
+    // ── INTELLIGENT TOP NAVIGATION HEADER FIXER ──────────────────
+    // Resolves broken header nav elements by routing text names to real filenames
+    function fixHeaderLinks() {
+      const links = document.querySelectorAll('header a, nav a, .subnav a, .menu a');
+      if (!links.length) return;
+
+      links.forEach(link => {
+        const text = link.textContent.trim().toLowerCase();
+        if (text.includes('t-shirt') || text.includes('tshirt')) {
+          link.href = 'tshirts.html';
+        } else if (text.includes('shirt') && !text.includes('t-')) {
+          link.href = 'shirts.html';
+        } else if (text.includes('trouser') || text.includes('pant')) {
+          link.href = 'trousers.html';
+        } else if (text.includes('shoe') || text.includes('sneaker')) {
+          link.href = 'shoes.html';
+        } else if (text.includes('watch')) {
+          link.href = 'watches.html';
+        } else if (text.includes('perfume') || text.includes('scent')) {
+          link.href = 'perfumes.html';
+        } else if (text.includes('accessor')) {
+          link.href = 'more-accessories.html';
+        }
+      });
+    }
+
+    // ── MAIN LOAD ────────────────────────────────────────
+
+    async function loadShop() {
+      const main     = document.getElementById('shopMain');
+      const skeleton = document.getElementById('shopSkeleton');
+
+      // Fetch all category files in parallel
+      const results = await Promise.all(
+        CATEGORIES.map(cat =>
+          fetchCategory(cat.file).then(products => ({ cat, products }))
+        )
+      );
+
+      // Remove skeleton loader
+      if (skeleton) skeleton.remove();
+
+      // Inject category sections
+      results.forEach(({ cat, products }) => {
+        main.appendChild(buildSection(cat, products));
+      });
+
+      // Execute navigation binding after DOM settles from file assembly
+      fixHeaderLinks();
+      // Secondary deferred pass to outrun asynchronously injected layouts from header.js
+      setTimeout(fixHeaderLinks, 400);
+      setTimeout(fixHeaderLinks, 1000);
+    }
+
+    // Kick off
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadShop);
+    } else {
+      loadShop();
+    }
+
+  })();
+  </script>
+
+</body>
+</html>
