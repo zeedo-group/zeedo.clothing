@@ -100,31 +100,6 @@
       inset: 0;
     }
 
-    .hero-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      text-align: center;
-      padding: 48px;
-    }
-
-    .hero-placeholder__label {
-      font-size: 0.58rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--grey-mid);
-    }
-
-    .hero-placeholder__hint {
-      font-size: 0.65rem;
-      color: var(--grey-mid);
-      line-height: 1.6;
-      max-width: 200px;
-    }
-
     .hero-corner-label {
       position: absolute;
       bottom: 24px;
@@ -135,6 +110,7 @@
       text-transform: uppercase;
       color: var(--grey-mid);
       writing-mode: vertical-rl;
+      z-index: 2;
     }
 
     /* ── CATEGORY STRIP ── */
@@ -144,13 +120,8 @@
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
     }
+    .category-strip__inner { display: flex; align-items: stretch; min-width: max-content; }
     .category-strip::-webkit-scrollbar { display: none; }
-
-    .category-strip__inner {
-      display: flex;
-      align-items: stretch;
-      min-width: max-content;
-    }
 
     .category-strip__item {
       display: flex;
@@ -172,6 +143,78 @@
     }
 
     .category-strip__item:last-child { border-right: none; }
+
+    /* ── LIFESTYLE ARCHIVE SECTION ── */
+    .lifestyle-section {
+      padding: 64px 48px;
+      border-bottom: 1px solid var(--grey-light);
+    }
+
+    .lifestyle-section__header {
+      border-bottom: 1px solid var(--grey-light);
+      padding-bottom: 16px;
+      margin-bottom: 32px;
+    }
+
+    .lifestyle-headline {
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
+
+    .archive-counter {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--grey-dark);
+      background: #f5f5f5;
+      padding: 6px 12px;
+      border: 1px solid var(--grey-light);
+      font-family: monospace, sans-serif;
+    }
+
+    /* 100% Full-Frame Landscape Aspect Layout */
+    .responsive-lifestyle-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .lifestyle-grid__panel {
+      position: relative;
+      overflow: hidden;
+      background: var(--grey-light);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+      aspect-ratio: 16 / 10; 
+    }
+
+    .lifestyle-grid__panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .lifestyle-grid__panel-label {
+      position: relative;
+      z-index: 2;
+      color: var(--white);
+      background: rgba(0, 0, 0, 0.85);
+      padding: 6px 12px;
+      width: max-content;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin: 0;
+    }
 
     /* ── INFO ROW ── */
     .info-row {
@@ -213,8 +256,8 @@
 
     /* ── FOOTER ── */
     .site-footer {
-      padding: 40px 0 28px;
-      border-top: 1px solid var(--grey-light);
+      padding: 64px 48px 40px;
+      background: var(--white);
     }
 
     .site-footer__inner {
@@ -237,37 +280,42 @@
       letter-spacing: 0.08em;
     }
 
-    /* ── RESPONSIVE ── */
+    /* ── RESPONSIVE MEDIA QUERIES ── */
     @media (max-width: 900px) {
-      .home-hero               { grid-template-columns: 1fr; }
-      .home-hero__left         { border-right: none; border-bottom: 1px solid var(--grey-light); padding: 48px 24px 40px; min-height: 60vh; }
-      .home-hero__right        { min-height: 320px; }
-      .info-row                { grid-template-columns: 1fr; }
-      .info-row__item          { border-right: none; border-bottom: 1px solid var(--grey-light); padding: 32px 24px; }
+      .home-hero { grid-template-columns: 1fr; }
+      .home-hero__left { border-right: none; border-bottom: 1px solid var(--grey-light); padding: 48px 24px 40px; min-height: 55vh; }
+      .home-hero__right { min-height: 360px; }
+      .lifestyle-section { padding: 40px 24px; }
+      .responsive-lifestyle-grid { grid-template-columns: 1fr; gap: 16px; }
+      .info-row { grid-template-columns: 1fr; }
+      .info-row__item { border-right: none; border-bottom: 1px solid var(--grey-light); padding: 32px 24px; }
       .info-row__item:last-child { border-bottom: none; }
-      .site-footer__inner      { flex-direction: column; align-items: flex-start; }
-      .home-hero__cta          { flex-direction: column; }
+      .site-footer { padding: 40px 24px 32px; }
+      .site-footer__inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .home-hero__cta { flex-direction: column; width: 100%; }
+      .home-hero__cta .btn { width: 100%; text-align: center; }
     }
 
     @media (max-width: 480px) {
-      .home-hero__left         { padding: 36px 20px 32px; }
-      .category-strip__item    { padding: 16px 22px; }
+      .home-hero__left { padding: 36px 20px 32px; }
+      .category-strip__item { padding: 16px 22px; }
+      .lifestyle-grid__panel { padding: 12px; }
     }
 
   </style>
 </head>
 <body class="page-body">
-  <!-- NO sub-nav on home page — intentionally minimalist -->
 
+  <!-- Shared Universal Header Component Fragment -->
   <header></header>
   <script src="header.js" defer></script>
 
   <!-- ══════════════════════════════════════
-       HERO
+       HERO MODULE
   ══════════════════════════════════════ -->
   <section class="home-hero">
 
-    <!-- Left: copy + CTAs -->
+    <!-- Left Branding Info Block Container -->
     <div class="home-hero__left">
       <div class="home-hero__top">
         <p class="home-hero__eyebrow">ZEEDO clothing — BD</p>
@@ -280,7 +328,7 @@
           Ultra-premium streetwear built for Dhaka.
           New drops. No restocks. Order before it's gone.
         </p>
-        <!-- CTA BUTTONS -->
+        
         <div class="home-hero__cta">
           <a href="shop.html" class="btn btn-primary">Shop Collection</a>
           <a href="#our-story" class="btn btn-outline">Our Story</a>
@@ -291,9 +339,10 @@
         <span class="home-hero__season">SS 2026 Collection</span>
       </div>
     </div>
-<!-- Right: hero image -->
+
+    <!-- Right Media Panel Element Context -->
     <div class="home-hero__right">
-      <img src="hero.jpg" alt="ZEEDO Streetwear Drop" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;">
+      <img src="hero.jpg" alt="ZEEDO Streetwear Drop"/>
       <span class="hero-corner-label">Dhaka, Bangladesh</span>
     </div>
 
@@ -314,78 +363,40 @@
     </div>
   </nav>
 
- <!-- ══════════════════════════════════════
-       LIFESTYLE SECTION
+  <!-- ══════════════════════════════════════
+       LIFESTYLE ARCHIVE CONTEXT GRID
   ══════════════════════════════════════ -->
   <section class="lifestyle-section" id="our-story">
-
-    <!-- Cool Technical Archive Counter Box -->
-    <div class="lifestyle-section__header" style="border-bottom: 1px solid var(--grey-light); padding-bottom: 16px; margin-bottom: 32px;">
-      <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;">
-        <h2 class="lifestyle-headline" style="font-size: 0.75rem; font-weight: 900; letter-spacing: 0.25em; text-transform: uppercase;">
+    <div class="lifestyle-section__header">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+        <h2 class="lifestyle-headline">
           ZEEDO ARCHIVE COLLECTION
         </h2>
-        <span id="live-archive-counter" style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--grey-mid); background: #f5f5f5; padding: 4px 10px; border: 1px solid var(--grey-light);">
-          LOADING ARCHIVE COUNTER...
+        <span id="live-archive-counter" class="archive-counter">
+          SYSTEM ONLINE // ARCHIVE RETRIEVAL...
         </span>
       </div>
     </div>
 
-<!-- 100% Full-Frame Lifestyle Grid (Zero Cropping) -->
-    <style>
-      /* Global Layout for Both Desktop & Laptop */
-      .responsive-lifestyle-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-        margin-top: 24px;
-      }
-      
-      .lifestyle-grid__panel {
-        position: relative;
-        overflow: hidden;
-        background: var(--grey-light);
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 20px;
-        /* Scales the container beautifully to match wide landscape photos perfectly */
-        aspect-ratio: 16 / 10; 
-      }
-      
-      /* Mobile Layout Overrides */
-      @media (max-width: 768px) {
-        .responsive-lifestyle-grid {
-          grid-template-columns: 1fr !important;
-          gap: 16px;
-        }
-        .lifestyle-grid__panel {
-          padding: 12px;
-          /* Maintains the exact same zero-crop shape on phones */
-          aspect-ratio: 16 / 10; 
-        }
-      }
-    </style>
-
     <div class="responsive-lifestyle-grid">
 
-      <!-- Panel 1 (home1.jpg) -->
+      <!-- Panel 01 -->
       <div class="lifestyle-grid__panel">
-        <img src="home1.jpg" alt="ZEEDO Lifestyle Drop 01" style="width: 100%; height: 100%; object-fit: contain; position: absolute; inset: 0; z-index: 1;">
-        <p class="lifestyle-grid__panel-label" style="position: relative; z-index: 2; color: #fff; background: rgba(0,0,0,0.8); padding: 6px 12px; width: max-content; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin: 0;">LIFESTYLE DROP 01</p>
+        <img src="home1.jpg" alt="ZEEDO Lifestyle Drop 01"/>
+        <p class="lifestyle-grid__panel-label">LIFESTYLE DROP 01</p>
       </div>
 
-      <!-- Panel 2 (home2.jpg) -->
+      <!-- Panel 02 -->
       <div class="lifestyle-grid__panel">
-        <img src="home2.jpg" alt="ZEEDO Lifestyle Drop 02" style="width: 100%; height: 100%; object-fit: contain; position: absolute; inset: 0; z-index: 1;">
-        <p class="lifestyle-grid__panel-label" style="position: relative; z-index: 2; color: #fff; background: rgba(0,0,0,0.8); padding: 6px 12px; width: max-content; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin: 0;">LIFESTYLE DROP 02</p>
+        <img src="home2.jpg" alt="ZEEDO Lifestyle Drop 02"/>
+        <p class="lifestyle-grid__panel-label">LIFESTYLE DROP 02</p>
       </div>
 
     </div>
   </section>
 
   <!-- ══════════════════════════════════════
-       INFO ROW
+       UTILITY VALUE ASSURANCE PROP GRID
   ══════════════════════════════════════ -->
   <div class="info-row">
     <div class="info-row__item">
@@ -409,15 +420,48 @@
        FOOTER
   ══════════════════════════════════════ -->
   <footer class="site-footer">
-    <div class="container">
-      <div class="site-footer__inner">
-        <span class="site-footer__brand">
-          ZEEDO <span style="font-weight:300">clothing</span>
-        </span>
-        <span class="site-footer__copy">© 2026 ZEEDO clothing. Dhaka, Bangladesh.</span>
-      </div>
+    <div class="site-footer__inner">
+      <span class="site-footer__brand">
+        ZEEDO <span style="font-weight:300">clothing</span>
+      </span>
+      <span class="site-footer__copy">© 2026 ZEEDO clothing. Dhaka, Bangladesh.</span>
     </div>
   </footer>
+
+  <!-- ── RUNTIME ARCHIVE MOTOR CONTROLLER ENGINE ── -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const counterElement = document.getElementById("live-archive-counter");
+      if (!counterElement) return;
+
+      // Generates a steady base score linked directly to chronological dates in 2026
+      const baseUnitsReleased = 14230;
+      const hoursFactor = Math.floor((Date.now() % 86400000) / 100000); 
+      let targetCount = baseUnitsReleased + hoursFactor;
+      let initialCount = targetCount - 45;
+
+      // Elegant linear ease-in ticker script animation loop
+      const tickerTimer = setInterval(() => {
+        initialCount += 3;
+        if (initialCount >= targetCount) {
+          initialCount = targetCount;
+          clearInterval(tickerTimer);
+          initializeRealtimeTrickle();
+        }
+        counterElement.textContent = `ARCHIVE VOL: ${initialCount.toLocaleString()} PCS LOGGED`;
+      }, 40);
+
+      // Instantiates minor automated system variance increments to give the look of a live store
+      function initializeRealtimeTrickle() {
+        setInterval(() => {
+          if (Math.random() > 0.4) {
+            targetCount += Math.floor(Math.random() * 2) + 1;
+            counterElement.textContent = `ARCHIVE VOL: ${targetCount.toLocaleString()} PCS LOGGED`;
+          }
+        }, 6000);
+      }
+    });
+  </script>
 
 </body>
 </html>
