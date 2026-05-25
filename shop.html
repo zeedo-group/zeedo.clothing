@@ -246,7 +246,7 @@
     <div class="modal-box">
       <button class="modal-box__close" id="shopModalClose" aria-label="Close">✕</button>
 
-    <div class="modal-box__image" style="position: relative;">
+      <div class="modal-box__image" style="position: relative;">
         <button id="shopModalPrevBtn" class="gallery-arrow" style="display:none; position:absolute; left:12px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.85); border:none; width:28px; height:28px; font-weight:bold; cursor:pointer; font-size:0.75rem; z-index:10; border-radius:50%;">&lt;</button>
         <button id="shopModalNextBtn" class="gallery-arrow" style="display:none; position:absolute; right:12px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.85); border:none; width:28px; height:28px; font-weight:bold; cursor:pointer; font-size:0.75rem; z-index:10; border-radius:50%;">&gt;</button>
         <img id="shopModalImg" src="" alt="" style="display:none"/>
@@ -257,8 +257,8 @@
 
       <div class="modal-box__body">
         <p class="modal-box__category" id="shopModalCategory"></p>
-        <h2 class="modal-box__title"   id="shopModalTitle"></h2>
-        <p class="modal-box__price"    id="shopModalPrice"></p>
+        <h2 class="modal-box__title"    id="shopModalTitle"></h2>
+        <p class="modal-box__price"     id="shopModalPrice"></p>
         <div class="modal-box__divider"></div>
         <div class="modal-box__colors">
           <label for="shopModalColor">Color</label>
@@ -270,7 +270,7 @@
           <span class="form-error-msg" id="shopModalColorError">Please select a color.</span>
         </div>
         <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;">
-          <button class="btn btn-primary btn-full" id="shopModalOrderBtn">Order Now</button>
+          <button class="btn btn-primary btn-full" id="shopModalOrderBtn">Add to Cart</button>
           <button class="btn btn-ghost   btn-full" id="shopModalCloseBtn">Close</button>
         </div>
       </div>
@@ -373,6 +373,11 @@
         select.appendChild(opt);
       });
 
+      // Reset add to cart button text state on load
+      const cartBtn = document.getElementById('shopModalOrderBtn');
+      cartBtn.textContent = "Add to Cart";
+      cartBtn.disabled = false;
+
       document.getElementById('shopModal').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
@@ -395,26 +400,60 @@
       activeProduct = null;
     }
 
-    function goToOrder(product) {
-      localStorage.setItem('ZEEDO_CHECKOUT_ITEM', JSON.stringify(product));
-      window.location.href = 'order.html';
+    // ── MULTI-ITEM CART ARRAY STORAGE ENGINE ──────────────────
+    function commitToCart(productBundle) {
+      let cart = JSON.parse(localStorage.getItem('ZEEDO_CART')) || [];
+
+      // Check if product with identical ID and Color option is already queued
+      let identicalItem = cart.find(item => item.id === productBundle.id && item.color === productBundle.selectedColor);
+
+      if (identicalItem) {
+        identicalItem.quantity += 1;
+      } else {
+        cart.push({
+          id: productBundle.id,
+          title: productBundle.title,
+          price: parseInt(productBundle.price),
+          category: productBundle.category,
+          image: productBundle.image,
+          color: productBundle.selectedColor,
+          quantity: 1
+        });
+      }
+
+      localStorage.setItem('ZEEDO_CART', JSON.stringify(cart));
+
+      // Global notification event hook in case header widgets listen for live updates
+      window.dispatchEvent(new Event('cartUpdated'));
+      if (typeof window.updateCartCount === 'function') {
+        window.updateCartCount();
+      }
     }
 
-    document.getElementById('shopModalOrderBtn').addEventListener('click', () => {
+    document.getElementById('shopModalOrderBtn').addEventListener('click', function() {
       if (!activeProduct) return;
       const select = document.getElementById('shopModalColor');
+      
       if (!select.value) {
         select.classList.add('error');
         document.getElementById('shopModalColorError').classList.add('visible');
         select.focus();
         return;
       }
-      goToOrder({ 
+
+      this.textContent = "Added to Cart ✓";
+      this.disabled = true;
+
+      commitToCart({ 
         ...activeProduct, 
         image: shopModalImages[shopCurrentImgIndex] || '', 
         selectedColor: select.value 
       });
+
+      // Smooth premium delayed dismissal
+      setTimeout(closeModal, 600);
     });
+
     // Close triggers
     document.getElementById('shopModalClose').addEventListener('click', closeModal);
     document.getElementById('shopModalCloseBtn').addEventListener('click', closeModal);
@@ -534,6 +573,32 @@
       return section;
     }
 
+    // ── INTELLIGENT TOP NAVIGATION HEADER FIXER ──────────────────
+    // Resolves broken header nav elements by routing text names to real filenames
+    function fixHeaderLinks() {
+      const links = document.querySelectorAll('header a, nav a, .subnav a, .menu a');
+      if (!links.length) return;
+
+      links.forEach(link => {
+        const text = link.textContent.trim().toLowerCase();
+        if (text.includes('t-shirt') || text.includes('tshirt')) {
+          link.href = 'tshirts.html';
+        } else if (text.includes('shirt') && !text.includes('t-')) {
+          link.href = 'shirts.html';
+        } else if (text.includes('trouser') || text.includes('pant')) {
+          link.href = 'trousers.html';
+        } else if (text.includes('shoe') || text.includes('sneaker')) {
+          link.href = 'shoes.html';
+        } else if (text.includes('watch')) {
+          link.href = 'watches.html';
+        } else if (text.includes('perfume') || text.includes('scent')) {
+          link.href = 'perfumes.html';
+        } else if (text.includes('accessor')) {
+          link.href = 'more-accessories.html';
+        }
+      });
+    }
+
     // ── MAIN LOAD ────────────────────────────────────────
 
     async function loadShop() {
@@ -548,12 +613,18 @@
       );
 
       // Remove skeleton loader
-      skeleton.remove();
+      if (skeleton) skeleton.remove();
 
       // Inject category sections
       results.forEach(({ cat, products }) => {
         main.appendChild(buildSection(cat, products));
       });
+
+      // Execute navigation binding after DOM settles from file assembly
+      fixHeaderLinks();
+      // Secondary deferred pass to outrun asynchronously injected layouts from header.js
+      setTimeout(fixHeaderLinks, 400);
+      setTimeout(fixHeaderLinks, 1000);
     }
 
     // Kick off
