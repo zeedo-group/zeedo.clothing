@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZEEDO clothing</title>
+
+  <!-- External stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Header script (injected with defer) -->
+  <script src="header.js" defer></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,600&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─────────────────────────────────────────
+       DESIGN TOKENS
+    ───────────────────────────────────────── */
+    :root {
+      --black:      #0a0a0a;
+      --white:      #f5f3ef;
+      --grey-light: #e2dfd9;
+      --grey-mid:   #a09d97;
+      --grey-dark:  #4a4845;
+
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-ui:      'Syne', sans-serif;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+      --px: clamp(20px, 5vw, 64px);   /* horizontal page padding */
+    }
+
+    /* ─────────────────────────────────────────
+       RESET & BASE
+    ───────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font-ui);
+      font-size: 14px;
+      letter-spacing: 0.01em;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* ─────────────────────────────────────────
+       HEADER placeholder — populated by header.js
+    ───────────────────────────────────────── */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 56px;
+      background: var(--white);
+      border-bottom: 1px solid var(--grey-light);
+      display: flex;
+      align-items: center;
+      padding: 0 var(--px);
+      /* header.js will hydrate inner content */
+    }
+
+    /* ─────────────────────────────────────────
+       PAGE WRAPPER (accounts for fixed header)
+    ───────────────────────────────────────── */
+    .page-wrap {
+      padding-top: 56px;
+    }
+
+    /* ─────────────────────────────────────────
+       A. HERO SECTION
+    ───────────────────────────────────────── */
+    .home-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: calc(100svh - 56px);
+      border-bottom: 1px solid var(--grey-light);
+    }
+
+    /* LEFT */
+    .home-hero__left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(40px, 7vw, 100px) var(--px) clamp(40px, 5vw, 80px);
+      border-right: 1px solid var(--grey-light);
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-ui);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--grey-mid);
+      margin-bottom: clamp(24px, 4vw, 48px);
+      animation: fadeUp 0.7s var(--ease-out) 0.1s both;
+    }
+
+    .hero-heading {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 7vw, 7rem);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      color: var(--black);
+      margin-bottom: clamp(24px, 3vw, 40px);
+      animation: fadeUp 0.7s var(--ease-out) 0.2s both;
+    }
+
+    .hero-heading em {
+      font-style: italic;
+      color: var(--grey-dark);
+      font-weight: 600;
+    }
+
+    .hero-sub {
+      font-family: var(--font-ui);
+      font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+      line-height: 1.8;
+      color: var(--grey-mid);
+      max-width: 300px;
+      margin-bottom: clamp(32px, 5vw, 56px);
+      animation: fadeUp 0.7s var(--ease-out) 0.3s both;
+    }
+
+    /* CTA row */
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: clamp(36px, 6vw, 72px);
+      animation: fadeUp 0.7s var(--ease-out) 0.4s both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-ui);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn--primary {
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--black);
+    }
+    .btn--primary:hover {
+      background: var(--grey-dark);
+      border-color: var(--grey-dark);
+    }
+
+    .btn--outline {
+      background: transparent;
+      color: var(--black);
+      border-color: var(--black);
+    }
+    .btn--outline:hover {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .hero-accent {
+      font-family: var(--font-ui);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--grey-light);
+      animation: fadeUp 0.7s var(--ease-out) 0.5s both;
+    }
+
+    /* RIGHT */
+    .home-hero__right {
+      position: relative;
+      background: var(--grey-light);
+      overflow: hidden;
+      min-height: 400px;
+    }
+
+    .hero-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .hero-placeholder__label {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--grey-dark);
+      letter-spacing: 0.02em;
+    }
+
+    .hero-placeholder__hint {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey-mid);
+      background: rgba(245,243,239,0.7);
+      padding: 8px 16px;
+      border: 1px dashed var(--grey-mid);
+      font-family: 'Courier New', monospace;
+    }
+
+    /* Corner label */
+    .hero-corner-label {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      font-family: var(--font-ui);
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--grey-dark);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      opacity: 0.5;
+      user-select: none;
+    }
+
+    /* ─────────────────────────────────────────
+       B. CATEGORY STRIP
+    ───────────────────────────────────────── */
+    .category-strip {
+      border-bottom: 1px solid var(--grey-light);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;          /* Firefox */
+    }
+    .category-strip::-webkit-scrollbar {
+      display: none;                  /* Chrome/Safari */
+    }
+
+    .category-strip__inner {
+      display: flex;
+      align-items: stretch;
+      min-width: max-content;         /* prevent wrapping */
+    }
+
+    .category-strip__item {
+      display: inline-flex;
+      align-items: center;
+      padding: 18px 28px;
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey-dark);
+      border-right: 1px solid var(--grey-light);
+      white-space: nowrap;
+      transition: color 0.15s, background 0.15s;
+      position: relative;
+    }
+    .category-strip__item::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--black);
+      transform: scaleX(0);
+      transition: transform 0.2s var(--ease-out);
+    }
+    .category-strip__item:hover {
+      color: var(--black);
+    }
+    .category-strip__item:hover::after {
+      transform: scaleX(1);
+    }
+    .category-strip__item:first-child {
+      border-left: none;
+    }
+
+    /* ─────────────────────────────────────────
+       C. LIFESTYLE GRID SECTION
+    ───────────────────────────────────────── */
+    .lifestyle-section {
+      padding: clamp(60px, 8vw, 120px) var(--px);
+      border-bottom: 1px solid var(--grey-light);
+    }
+
+    .lifestyle-section__head {
+      margin-bottom: clamp(32px, 5vw, 56px);
+    }
+
+    .lifestyle-heading {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4.5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--black);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      max-width: 660px;
+    }
+    .lifestyle-heading em {
+      font-style: italic;
+      color: var(--grey-dark);
+      font-weight: 300;
+    }
+
+    .lifestyle-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .lifestyle-panel {
+      position: relative;
+      background: var(--grey-light);
+      min-height: 380px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .lifestyle-panel__content {
+      position: relative;
+      z-index: 1;
+      padding: 28px;
+      width: 100%;
+      background: linear-gradient(to top, rgba(10,10,10,0.35) 0%, transparent 100%);
+    }
+
+    .lifestyle-panel__tag {
+      display: inline-block;
+      font-family: var(--font-ui);
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--white);
+      border: 1px solid rgba(245,243,239,0.5);
+      padding: 5px 10px;
+      margin-bottom: 12px;
+    }
+
+    .lifestyle-panel__body {
+      font-family: var(--font-ui);
+      font-size: 0.7rem;
+      color: rgba(245,243,239,0.75);
+      line-height: 1.7;
+      letter-spacing: 0.03em;
+    }
+
+    /* Placeholder texture overlay */
+    .lifestyle-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          rgba(74,72,69,0.04) 0px,
+          rgba(74,72,69,0.04) 1px,
+          transparent 1px,
+          transparent 14px
+        );
+    }
+
+    /* ─────────────────────────────────────────
+       D. INFO ROW
+    ───────────────────────────────────────── */
+    .info-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      border-bottom: 1px solid var(--grey-light);
+    }
+
+    .info-col {
+      padding: clamp(28px, 4vw, 56px) var(--px);
+      border-right: 1px solid var(--grey-light);
+    }
+    .info-col:last-child {
+      border-right: none;
+    }
+
+    .info-col__label {
+      font-family: var(--font-ui);
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--grey-mid);
+      margin-bottom: 10px;
+    }
+
+    .info-col__value {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 2vw, 1.6rem);
+      font-weight: 600;
+      color: var(--black);
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .info-col__desc {
+      font-family: var(--font-ui);
+      font-size: 0.7rem;
+      line-height: 1.8;
+      color: var(--grey-mid);
+    }
+
+    /* ─────────────────────────────────────────
+       E. SITE FOOTER
+    ───────────────────────────────────────── */
+    .site-footer {
+      padding: clamp(20px, 3vw, 36px) var(--px);
+    }
+
+    .site-footer__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 1.5vw, 1.3rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--black);
+    }
+
+    .footer-brand span {
+      font-weight: 300;
+    }
+
+    .footer-copy {
+      font-family: var(--font-ui);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--grey-mid);
+    }
+
+    /* ─────────────────────────────────────────
+       PAGE LOAD ANIMATIONS
+    ───────────────────────────────────────── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE — ≤ 900px
+    ───────────────────────────────────────── */
+    @media (max-width: 900px) {
+      /* Hero collapses to single column */
+      .home-hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .home-hero__left {
+        border-right: none;
+        border-bottom: 1px solid var(--grey-light);
+        padding: 48px var(--px) 40px;
+      }
+
+      .home-hero__right {
+        min-height: 55vw;
+      }
+
+      /* CTA buttons stack full-width on small phones */
+      @media (max-width: 480px) {
+        .hero-cta-row {
+          flex-direction: column;
+        }
+        .btn {
+          width: 100%;
+        }
+      }
+
+      /* Lifestyle grid single column */
+      .lifestyle-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Info row stacks vertically */
+      .info-row {
+        grid-template-columns: 1fr;
+      }
+      .info-col {
+        border-right: none;
+        border-bottom: 1px solid var(--grey-light);
+      }
+      .info-col:last-child {
+        border-bottom: none;
+      }
+
+      /* Footer stacks */
+      .site-footer__inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* Extra small — phones ≤ 480px */
+    @media (max-width: 480px) {
+      .hero-cta-row {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER (hydrated by header.js) ── -->
+  <header></header>
+
+  <div class="page-wrap">
+
+    <!-- ════════════════════════════════════
+         A. HERO SECTION
+    ════════════════════════════════════ -->
+    <section class="home-hero">
+
+      <!-- LEFT -->
+      <div class="home-hero__left">
+        <p class="hero-eyebrow">ZEEDO clothing — BD</p>
+
+        <h1 class="hero-heading">
+          Wear The <em>Drop.</em>
+        </h1>
+
+        <p class="hero-sub">
+          Ultra-premium streetwear built for Dhaka.
+          New drops. No restocks.
+          Order before it's gone.
+        </p>
+
+        <div class="hero-cta-row">
+          <a href="shop.html" class="btn btn--primary">Shop Collection</a>
+          <a href="#our-story" class="btn btn--outline">Our Story</a>
+        </div>
+
+        <p class="hero-accent">SS 2026 Collection</p>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="home-hero__right">
+        <div class="hero-placeholder">
+          <p class="hero-placeholder__label">Hero Image</p>
+          <p class="hero-placeholder__hint">Replace this div with &lt;img src="images/hero.jpg"/&gt;</p>
+        </div>
+        <span class="hero-corner-label">Dhaka, Bangladesh</span>
+      </div>
+
+    </section>
+
+    <!-- ════════════════════════════════════
+         B. CATEGORY QUICK-NAV STRIP
+    ════════════════════════════════════ -->
+    <nav class="category-strip" aria-label="Product categories">
+      <div class="category-strip__inner">
+        <a href="tshirts.html"          class="category-strip__item">T-Shirts</a>
+        <a href="shirts.html"           class="category-strip__item">Shirts</a>
+        <a href="trousers.html"         class="category-strip__item">Trousers</a>
+        <a href="shoes.html"            class="category-strip__item">Shoes</a>
+        <a href="watches.html"          class="category-strip__item">Watches</a>
+        <a href="perfumes.html"         class="category-strip__item">Perfumes</a>
+        <a href="more-accessories.html" class="category-strip__item">Accessories</a>
+      </div>
+    </nav>
+
+    <!-- ════════════════════════════════════
+         C. LIFESTYLE GRID SECTION
+    ════════════════════════════════════ -->
+    <section class="lifestyle-section" id="our-story">
+
+      <div class="lifestyle-section__head">
+        <h2 class="lifestyle-heading">
+          add more <em>nerdy things</em><br>for the home.
+        </h2>
+      </div>
+
+      <div class="lifestyle-grid">
+
+        <!-- Panel 1 -->
+        <div class="lifestyle-panel">
+          <div class="lifestyle-panel__content">
+            <div class="lifestyle-panel__tag">Lifestyle Drop 01</div>
+            <p class="lifestyle-panel__body">
+              Add your product image here.<br>
+              Rugs, collectibles, room accessories.
+            </p>
+          </div>
+        </div>
+
+        <!-- Panel 2 -->
+        <div class="lifestyle-panel">
+          <div class="lifestyle-panel__content">
+            <div class="lifestyle-panel__tag">Lifestyle Drop 02</div>
+            <p class="lifestyle-panel__body">
+              Add your product image here.<br>
+              More nerdy things. Coming soon.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════
+         D. VALUE INFO ROW
+    ════════════════════════════════════ -->
+    <div class="info-row">
+
+      <div class="info-col">
+        <p class="info-col__label">Delivery</p>
+        <p class="info-col__value">Cash on Delivery</p>
+        <p class="info-col__desc">Pay when your order arrives. No card, no hassle.</p>
+      </div>
+
+      <div class="info-col">
+        <p class="info-col__label">Drops</p>
+        <p class="info-col__value">Limited Stock</p>
+        <p class="info-col__desc">Every piece is limited. New drops at the top. No restocks.</p>
+      </div>
+
+      <div class="info-col">
+        <p class="info-col__label">Order</p>
+        <p class="info-col__value">30 Seconds</p>
+        <p class="info-col__desc">Pick your item, fill your details, done. We confirm by call.</p>
+      </div>
+
+    </div>
+
+    <!-- ════════════════════════════════════
+         E. SITE FOOTER
+    ════════════════════════════════════ -->
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <div class="footer-brand">
+          ZEEDO <span>clothing</span>
+        </div>
+        <p class="footer-copy">© 2026 ZEEDO clothing. Dhaka, Bangladesh.</p>
+      </div>
+    </footer>
+
+  </div><!-- /page-wrap -->
+
+</body>
+</html>
