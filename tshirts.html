@@ -101,8 +101,8 @@
             <p class="product-card__title">Acid wash Oversized Graphic Tee, GAME OVER</p>
             <p class="product-card__price">550 BDT</p>
             <div class="product-card__actions">
-              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'))">Details</button>
-              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'))">Order Now</button>
+              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'), false)">Details</button>
+              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'), true)">Order Now</button>
             </div>
           </div>
         </div>
@@ -120,8 +120,8 @@
             <p class="product-card__title">Acid Wash Graphic Tee, Spider</p>
             <p class="product-card__price">550 BDT</p>
             <div class="product-card__actions">
-              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'))">Details</button>
-              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'))">Order Now</button>
+              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'), false)">Details</button>
+              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'), true)">Order Now</button>
             </div>
           </div>
         </div>
@@ -139,8 +139,8 @@
             <p class="product-card__title">Acid Wash Drop Shoulder Tee, Squid Game</p>
             <p class="product-card__price">550 BDT</p>
             <div class="product-card__actions">
-              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'))">Details</button>
-              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'))">Order Now</button>
+              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'), false)">Details</button>
+              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'), true)">Order Now</button>
             </div>
           </div>
         </div>
@@ -158,8 +158,8 @@
             <p class="product-card__title">Cropped Boxy Tee</p>
             <p class="product-card__price">1,100 BDT</p>
             <div class="product-card__actions">
-              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'))">Details</button>
-              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'))">Order Now</button>
+              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'), false)">Details</button>
+              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'), true)">Order Now</button>
             </div>
           </div>
         </div>
@@ -177,8 +177,8 @@
             <p class="product-card__title">Vintage Wash Longline Tee</p>
             <p class="product-card__price">1,350 BDT</p>
             <div class="product-card__actions">
-              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'))">Details</button>
-              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'))">Order Now</button>
+              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'), false)">Details</button>
+              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'), true)">Order Now</button>
             </div>
           </div>
         </div>
@@ -196,8 +196,8 @@
             <p class="product-card__title">Street Pocket Tee</p>
             <p class="product-card__price">850 BDT</p>
             <div class="product-card__actions">
-              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'))">Details</button>
-              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'))">Order Now</button>
+              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'), false)">Details</button>
+              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'), true)">Order Now</button>
             </div>
           </div>
         </div>
@@ -206,6 +206,7 @@
     </div>
   </main>
 
+  <!-- Details Overlay Popup Container -->
   <div class="modal-overlay" id="detailsModal" aria-modal="true" role="dialog">
     <div class="modal-box">
       <button class="modal-box__close" id="modalClose" aria-label="Close">✕</button>
@@ -222,4 +223,217 @@
       <div class="modal-box__body">
         <p class="modal-box__category" id="modalCategory">T-Shirts</p>
         <h2 class="modal-box__title"   id="modalTitle">Product Name</h2>
-        <p class="modal-box__price"    id="modalPrice">0 BDT</
+        <p class="modal-box__price"    id="modalPrice">0 BDT</p>
+        <div class="modal-box__divider"></div>
+        <div class="modal-box__colors">
+          <label for="modalColorSelect">Color</label>
+          <div class="select-wrap">
+            <select class="form-select" id="modalColorSelect">
+              <option value="">Select a color</option>
+            </select>
+          </div>
+          <span class="form-error-msg" id="modalColorError">Please select a color.</span>
+        </div>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;">
+          <button class="btn btn-primary btn-full" id="modalOrderBtn">Add to Cart</button>
+          <button class="btn btn-ghost   btn-full" id="modalCloseBtn">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__inner">
+        <span class="site-footer__brand">ZEEDO <span style="font-weight:300">clothing</span></span>
+        <span class="site-footer__copy">© 2026 ZEEDO clothing. Dhaka, Bangladesh.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const fmt = window.ZEEDO?.formatPrice ?? (v => parseInt(v).toLocaleString('en-BD') + ' BDT');
+
+    let activeCard = null;
+    let modalImages = [];
+    let currentImgIndex = 0;
+    let expressCheckoutMode = false; // Tracks if customer wants direct single checkout
+
+    // ── AUTOMATED GRID THUMBNAIL INJECTOR ──
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll('.product-card').forEach(card => {
+        const imageAttr = card.dataset.image;
+        if (imageAttr && imageAttr.trim() !== '') {
+          const firstImg = imageAttr.split(',')[0].trim();
+          const imgWrap = card.querySelector('.product-card__image-wrap');
+          if (imgWrap) {
+            imgWrap.innerHTML = `<img src="${firstImg}" alt="${card.dataset.title}" loading="lazy" style="width:100%; height:100%; object-fit:cover;">`;
+          }
+        }
+      });
+    });
+
+    function updateModalImage() {
+      document.getElementById('modalImg').src = modalImages[currentImgIndex];
+    }
+
+    // Modal loader rewritten to handle layout mode conditions dynamically
+    function openDetails(card, directBuyMode = false) {
+      activeCard = card;
+      expressCheckoutMode = directBuyMode;
+
+      const title    = card.dataset.title;
+      const price    = card.dataset.price;
+      const image    = card.dataset.image;
+      const colors   = card.dataset.colors;
+      const category = card.dataset.category;
+
+      document.getElementById('modalTitle').textContent    = title;
+      document.getElementById('modalPrice').textContent    = fmt(price);
+      document.getElementById('modalCategory').textContent = category;
+
+      const imgEl      = document.getElementById('modalImg');
+      const placeholder= document.getElementById('modalPlaceholder');
+      const prevBtn    = document.getElementById('modalPrevBtn');
+      const nextBtn    = document.getElementById('modalNextBtn');
+
+      if (image && image.trim() !== '') {
+        modalImages = image.split(',').map(img => img.trim());
+        currentImgIndex = 0;
+
+        imgEl.src                 = modalImages[0];
+        imgEl.alt                 = title;
+        imgEl.style.display       = 'block';
+        placeholder.style.display = 'none';
+
+        if (modalImages.length > 1) {
+          prevBtn.style.display = 'block';
+          nextBtn.style.display = 'block';
+        } else {
+          prevBtn.style.display = 'none';
+          nextBtn.style.display = 'none';
+        }
+      } else {
+        modalImages = [];
+        imgEl.style.display       = 'none';
+        placeholder.style.display = 'flex';
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+      }
+
+      const select = document.getElementById('modalColorSelect');
+      select.innerHTML = '<option value="">Select a color</option>';
+      select.classList.remove('error');
+      document.getElementById('modalColorError').classList.remove('visible');
+
+      colors.split(',').forEach(c => {
+        const opt       = document.createElement('option');
+        opt.value       = c.trim();
+        opt.textContent = c.trim();
+        select.appendChild(opt);
+      });
+
+      // UI Context Optimization: Changes button personality instantly
+      const cartBtn = document.getElementById('modalOrderBtn');
+      cartBtn.disabled = false;
+      if (expressCheckoutMode) {
+        cartBtn.textContent = "Buy Now";
+      } else {
+        cartBtn.textContent = "Add to Cart";
+      }
+
+      document.getElementById('detailsModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    document.getElementById('modalPrevBtn').addEventListener('click', () => {
+      if (modalImages.length <= 1) return;
+      currentImgIndex = (currentImgIndex - 1 + modalImages.length) % modalImages.length;
+      updateModalImage();
+    });
+
+    document.getElementById('modalNextBtn').addEventListener('click', () => {
+      if (modalImages.length <= 1) return;
+      currentImgIndex = (currentImgIndex + 1) % modalImages.length;
+      updateModalImage();
+    });
+
+    function closeModal() {
+      document.getElementById('detailsModal').classList.remove('open');
+      document.body.style.overflow = '';
+      activeCard = null;
+    }
+
+    // ── CART ACTION DISPATCH ENGINE ──
+    function commitToCart(productBundle) {
+      let cart = JSON.parse(localStorage.getItem('ZEEDO_CART')) || [];
+
+      let identicalItem = cart.find(item => item.id === productBundle.id && item.color === productBundle.selectedColor);
+
+      if (identicalItem) {
+        identicalItem.quantity += 1;
+      } else {
+        cart.push({
+          id: productBundle.id,
+          title: productBundle.title,
+          price: parseInt(productBundle.price),
+          category: productBundle.category,
+          image: productBundle.image,
+          color: productBundle.selectedColor,
+          quantity: 1
+        });
+      }
+
+      localStorage.setItem('ZEEDO_CART', JSON.stringify(cart));
+
+      window.dispatchEvent(new Event('cartUpdated'));
+      if (window.ZEEDO && typeof window.ZEEDO.updateCartCount === 'function') {
+        window.ZEEDO.updateCartCount();
+      }
+    }
+
+    document.getElementById('modalOrderBtn').addEventListener('click', function() {
+      if (!activeCard) return;
+      const select = document.getElementById('modalColorSelect');
+      
+      if (!select.value) {
+        select.classList.add('error');
+        document.getElementById('modalColorError').classList.add('visible');
+        select.focus();
+        return;
+      }
+
+      // Commit choices to storage schema
+      commitToCart({
+        id:            activeCard.dataset.id,
+        title:         activeCard.dataset.title,
+        price:         activeCard.dataset.price,
+        image:         modalImages[currentImgIndex] || '',
+        category:      activeCard.dataset.category,
+        selectedColor: select.value
+      });
+
+      if (expressCheckoutMode) {
+        // Express checkout execution line: Bypasses animations and fires redirect immediately
+        this.textContent = "Redirecting...";
+        window.location.href = 'order.html';
+      } else {
+        // Standard workflow layout animation cycle
+        this.textContent = "Added to Cart ✓";
+        this.disabled = true;
+        setTimeout(closeModal, 600);
+      }
+    });
+
+    // Close triggers
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
+    document.getElementById('detailsModal').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  </script>
+
+</body>
+</html>
