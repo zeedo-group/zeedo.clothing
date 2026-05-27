@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZEEDO clothing — Perfumes</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    .site-footer { padding:40px 0 28px; border-top:1px solid var(--grey-light); margin-top:80px; }
+    .site-footer__inner { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; }
+    .site-footer__brand { font-size:0.75rem; font-weight:900; letter-spacing:0.05em; text-transform:uppercase; }
+    .site-footer__copy  { font-size:0.62rem; color:var(--grey-mid); letter-spacing:0.08em; }
+    @media(max-width:768px){ .site-footer__inner{ flex-direction:column; align-items:flex-start; } }
+  </style>
+</head>
+<body class="page-body page-body--has-subnav">
+  <header></header>
+  <script src="header.js" defer></script>
+
+  <section style="padding:56px 0 40px;border-bottom:1px solid var(--grey-light);">
+    <div class="container">
+      <p class="t-subheading">Zeedo Clothing</p>
+      <h1 class="t-heading" style="margin-top:8px;">Perfumes</h1>
+      <p class="t-body" style="margin-top:14px;max-width:440px;">
+        Scents that leave a mark before you even say a word.
+        New drops added at the top — no restocks.
+      </p>
+    </div>
+  </section>
+
+  <main style="padding:56px 0;">
+    <div class="container">
+      <div class="grid-3" id="productGrid">
+
+        <div class="product-card"
+             data-id="601" data-title="Dark Oud Eau de Parfum" data-price="3500"
+             data-image="" data-colors="30ml,50ml,100ml" data-category="Perfumes">
+          <div class="product-card__image-wrap" data-placeholder="Photo Coming Soon"></div>
+          <div class="product-card__body">
+            <p class="product-card__category">Perfumes</p>
+            <p class="product-card__title">Dark Oud Eau de Parfum</p>
+            <p class="product-card__price">3,500 BDT</p>
+            <div class="product-card__actions">
+              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'))">Details</button>
+              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'))">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card"
+             data-id="602" data-title="Aqua Street EDT" data-price="2800"
+             data-image="" data-colors="30ml,50ml,100ml" data-category="Perfumes">
+          <div class="product-card__image-wrap" data-placeholder="Photo Coming Soon"></div>
+          <div class="product-card__body">
+            <p class="product-card__category">Perfumes</p>
+            <p class="product-card__title">Aqua Street EDT</p>
+            <p class="product-card__price">2,800 BDT</p>
+            <div class="product-card__actions">
+              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'))">Details</button>
+              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'))">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card"
+             data-id="603" data-title="Smoky Vetiver EDP" data-price="4200"
+             data-image="" data-colors="50ml,100ml" data-category="Perfumes">
+          <div class="product-card__image-wrap" data-placeholder="Photo Coming Soon"></div>
+          <div class="product-card__body">
+            <p class="product-card__category">Perfumes</p>
+            <p class="product-card__title">Smoky Vetiver EDP</p>
+            <p class="product-card__price">4,200 BDT</p>
+            <div class="product-card__actions">
+              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'))">Details</button>
+              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'))">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card"
+             data-id="604" data-title="Cedar & Black Pepper EDT" data-price="3000"
+             data-image="" data-colors="30ml,50ml,100ml" data-category="Perfumes">
+          <div class="product-card__image-wrap" data-placeholder="Photo Coming Soon"></div>
+          <div class="product-card__body">
+            <p class="product-card__category">Perfumes</p>
+            <p class="product-card__title">Cedar & Black Pepper EDT</p>
+            <p class="product-card__price">3,000 BDT</p>
+            <div class="product-card__actions">
+              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'))">Details</button>
+              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'))">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card"
+             data-id="605" data-title="White Musk Parfum" data-price="2500"
+             data-image="" data-colors="30ml,50ml" data-category="Perfumes">
+          <div class="product-card__image-wrap" data-placeholder="Photo Coming Soon"></div>
+          <div class="product-card__body">
+            <p class="product-card__category">Perfumes</p>
+            <p class="product-card__title">White Musk Parfum</p>
+            <p class="product-card__price">2,500 BDT</p>
+            <div class="product-card__actions">
+              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'))">Details</button>
+              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'))">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card"
+             data-id="606" data-title="Tobacco & Amber EDP" data-price="4800"
+             data-image="" data-colors="50ml,100ml" data-category="Perfumes">
+          <div class="product-card__image-wrap" data-placeholder="Photo Coming Soon"></div>
+          <div class="product-card__body">
+            <p class="product-card__category">Perfumes</p>
+            <p class="product-card__title">Tobacco & Amber EDP</p>
+            <p class="product-card__price">4,800 BDT</p>
+            <div class="product-card__actions">
+              <button class="btn btn-primary" onclick="openDetails(this.closest('.product-card'))">Details</button>
+              <button class="btn btn-outline" onclick="openDetails(this.closest('.product-card'))">Order Now</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="detailsModal" aria-modal="true" role="dialog">
+    <div class="modal-box">
+      <button class="modal-box__close" id="modalClose" aria-label="Close">✕</button>
+      <div class="modal-box__image">
+        <img id="modalImg" src="" alt="" style="display:none"/>
+        <div id="modalPlaceholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--grey-light)">
+          <span style="font-size:0.58rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--grey-mid)">Photo Coming Soon</span>
+        </div>
+      </div>
+      <div class="modal-box__body">
+        <p class="modal-box__category" id="modalCategory"></p>
+        <h2 class="modal-box__title"   id="modalTitle"></h2>
+        <p class="modal-box__price"    id="modalPrice"></p>
+        <div class="modal-box__divider"></div>
+        <div class="modal-box__colors">
+          <label for="modalColorSelect">Size</label>
+          <div class="select-wrap">
+            <select class="form-select" id="modalColorSelect"><option value="">Select a size</option></select>
+          </div>
+          <span class="form-error-msg" id="modalColorError">Please select a size.</span>
+        </div>
+        <div class="modal-box__colors" style="margin-top:14px;">
+          <label>Quantity</label>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
+            <button type="button" class="qty-btn" id="modalQtyMinus" aria-label="Decrease quantity">−</button>
+            <span id="modalQtyVal" style="font-size:1rem;font-weight:700;min-width:24px;text-align:center;">1</span>
+            <button type="button" class="qty-btn" id="modalQtyPlus" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;">
+          <button class="btn btn-primary btn-full" id="modalOrderBtn">Order Now</button>
+          <button class="btn btn-outline  btn-full" id="modalAddCartBtn">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__inner">
+        <span class="site-footer__brand">ZEEDO <span style="font-weight:300">clothing</span></span>
+        <span class="site-footer__copy">© 2026 ZEEDO clothing. Dhaka, Bangladesh.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const fmt = window.ZEEDO?.formatPrice ?? (v => parseInt(v).toLocaleString('en-BD') + ' BDT');
+    let activeCard = null; let modalQty = 1;
+    function openDetails(card) {
+      modalQty = 1; document.getElementById('modalQtyVal').textContent = '1';
+      activeCard = card;
+      document.getElementById('modalTitle').textContent    = card.dataset.title;
+      document.getElementById('modalPrice').textContent    = fmt(card.dataset.price);
+      document.getElementById('modalCategory').textContent = card.dataset.category;
+      const imgEl = document.getElementById('modalImg'), ph = document.getElementById('modalPlaceholder');
+      if (card.dataset.image && card.dataset.image.trim() !== '') { imgEl.src = card.dataset.image; imgEl.alt = card.dataset.title; imgEl.style.display = 'block'; ph.style.display = 'none'; }
+      else { imgEl.style.display = 'none'; ph.style.display = 'flex'; }
+      const sel = document.getElementById('modalColorSelect');
+      sel.innerHTML = '<option value="">Select a size</option>';
+      sel.classList.remove('error');
+      document.getElementById('modalColorError').classList.remove('visible');
+      card.dataset.colors.split(',').forEach(c => { const o = document.createElement('option'); o.value = c.trim(); o.textContent = c.trim(); sel.appendChild(o); });
+      document.getElementById('detailsModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() { document.getElementById('detailsModal').classList.remove('open'); document.body.style.overflow = ''; activeCard = null; }
+    document.getElementById('modalOrderBtn').addEventListener('click', () => {
+      if (!activeCard) return;
+      const sel = document.getElementById('modalColorSelect');
+      if (!sel.value) { sel.classList.add('error'); document.getElementById('modalColorError').classList.add('visible'); sel.focus(); return; }
+      localStorage.setItem('ZEEDO_CHECKOUT_ITEM', JSON.stringify({ id: activeCard.dataset.id, title: activeCard.dataset.title, price: activeCard.dataset.price, image: activeCard.dataset.image, colors: activeCard.dataset.colors, category: activeCard.dataset.category, selectedColor: sel.value, qty: modalQty }));
+      window.location.href = 'order.html';
+    });
+    document.getElementById('modalQtyMinus').addEventListener('click', () => { if (modalQty > 1) { modalQty--; document.getElementById('modalQtyVal').textContent = modalQty; } });
+    document.getElementById('modalQtyPlus').addEventListener('click', () => { modalQty++; document.getElementById('modalQtyVal').textContent = modalQty; });
+    document.getElementById('modalAddCartBtn').addEventListener('click', () => {
+      if (!activeCard) return;
+      const sel = document.getElementById('modalColorSelect');
+      if (!sel.value) { sel.classList.add('error'); document.getElementById('modalColorError').classList.add('visible'); sel.focus(); return; }
+      const addFn = window.ZEEDO?.addToCart;
+      if (addFn) { for (let i = 0; i < modalQty; i++) addFn({ id: activeCard.dataset.id, title: activeCard.dataset.title, price: activeCard.dataset.price, image: activeCard.dataset.image, colors: activeCard.dataset.colors, category: activeCard.dataset.category, selectedColor: sel.value }); }
+      closeModal();
+    });
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('detailsModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+    document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+  </script>
+</body>
+</html>
