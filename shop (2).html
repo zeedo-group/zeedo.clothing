@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZEEDO clothing — Shop</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+
+    /* ── SHOP HERO ── */
+    .shop-hero {
+      padding: 64px 0 48px;
+      border-bottom: 1px solid var(--grey-light);
+    }
+
+    .shop-hero__inner {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    /* ── CATEGORY BLOCK ── */
+    .category-block {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--grey-light);
+    }
+
+    .category-block:last-child {
+      border-bottom: none;
+    }
+
+    /* ── SECTION ROW: title left, "view more ->" right ── */
+    .section-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--grey-light);
+    }
+
+    .section-row__left {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    /* "view more ->" link — exact copy per wireframe */
+    .view-more {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: lowercase;
+      color: var(--grey-mid);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: color var(--transition);
+      white-space: nowrap;
+    }
+
+    .view-more:hover {
+      color: var(--black);
+    }
+
+    /* ── EMPTY STATE PER CATEGORY ── */
+    .category-empty {
+      grid-column: 1 / -1;
+      padding: 56px 0;
+      text-align: center;
+      color: var(--grey-mid);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border: 1px solid var(--grey-light);
+    }
+
+    /* ── SKELETON LOADER ── */
+    .skeleton-section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--grey-light);
+    }
+
+    .skeleton-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--grey-light);
+    }
+
+    .skeleton-label {
+      height: 10px;
+      width: 80px;
+      margin-bottom: 8px;
+    }
+
+    .skeleton-title {
+      height: 28px;
+      width: 160px;
+    }
+
+    .skeleton-link {
+      height: 10px;
+      width: 80px;
+    }
+
+    /* ── MODAL ── */
+    #shopModal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(10,10,10,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    #shopModal.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #shopModal .modal-box {
+      transform: translateY(18px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #shopModal.open .modal-box {
+      transform: translateY(0);
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      padding: 40px 0 28px;
+      border-top: 1px solid var(--grey-light);
+    }
+
+    .site-footer__inner {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .site-footer__brand {
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .site-footer__copy {
+      font-size: 0.62rem;
+      color: var(--grey-mid);
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 768px) {
+      .shop-hero__inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .site-footer__inner { flex-direction: column; align-items: flex-start; }
+    }
+
+  </style>
+</head>
+<body class="page-body page-body--has-subnav">
+
+  <header></header>
+  <script src="header.js" defer></script>
+
+  <!-- ══════════════════════════════════════
+       SHOP HERO
+  ══════════════════════════════════════ -->
+  <section class="shop-hero">
+    <div class="container">
+      <div class="shop-hero__inner">
+        <div>
+          <p class="t-subheading">Everything</p>
+          <h1 class="t-heading" style="margin-top: 6px;">The Drop</h1>
+        </div>
+        <p class="t-body" style="max-width: 340px; text-align: right; color: var(--grey-mid);">
+          Newest pieces at the top of every section.<br/>
+          Tap Details to explore. Order in seconds.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       DYNAMIC CATEGORY SECTIONS
+       Built entirely by the shop engine below.
+       Body is intentionally blank here.
+  ══════════════════════════════════════ -->
+  <main id="shopMain">
+
+    <!-- Skeleton shown while JS fetches category files -->
+    <div id="shopSkeleton">
+      <!-- Repeat 3 skeleton blocks to fill the screen -->
+      <div class="skeleton-section">
+        <div class="container">
+          <div class="skeleton-row">
+            <div>
+              <div class="skeleton skeleton-label"></div>
+              <div class="skeleton skeleton-title"></div>
+            </div>
+            <div class="skeleton skeleton-link"></div>
+          </div>
+          <div class="loading-grid">
+            <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text-sm"></div></div>
+            <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text-sm"></div></div>
+            <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text-sm"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="skeleton-section">
+        <div class="container">
+          <div class="skeleton-row">
+            <div>
+              <div class="skeleton skeleton-label"></div>
+              <div class="skeleton skeleton-title"></div>
+            </div>
+            <div class="skeleton skeleton-link"></div>
+          </div>
+          <div class="loading-grid">
+            <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text-sm"></div></div>
+            <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text-sm"></div></div>
+            <div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text-sm"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════
+       DETAILS MODAL
+  ══════════════════════════════════════ -->
+  <div id="shopModal" aria-modal="true" role="dialog" aria-label="Product details">
+    <div class="modal-box">
+      <button class="modal-box__close" id="shopModalClose" aria-label="Close">✕</button>
+
+            <div class="modal-box__image" id="shopModalImagePane">
+        <!-- Populated by SLIDER.build() in openModal() -->
+      </div>
+
+      <div class="modal-box__body">
+        <p class="modal-box__category" id="shopModalCategory"></p>
+        <h2 class="modal-box__title"   id="shopModalTitle"></h2>
+        <p class="modal-box__price"    id="shopModalPrice"></p>
+        <div class="modal-box__divider"></div>
+        <div class="modal-box__colors">
+          <label for="shopModalColor">Color / Variant</label>
+          <div class="select-wrap">
+            <select class="form-select" id="shopModalColor">
+              <option value="">Select a color</option>
+            </select>
+          </div>
+          <span class="form-error-msg" id="shopModalColorError">Please select a color.</span>
+        </div>
+        <div class="modal-box__colors" style="margin-top:14px;">
+          <label for="shopModalQty">Quantity</label>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
+            <button type="button" class="qty-btn" id="shopModalQtyMinus" aria-label="Decrease quantity">−</button>
+            <span id="shopModalQtyVal" style="font-size:1rem;font-weight:700;min-width:24px;text-align:center;">1</span>
+            <button type="button" class="qty-btn" id="shopModalQtyPlus"  aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;">
+          <button class="btn btn-primary btn-full" id="shopModalOrderBtn">Order Now</button>
+          <button class="btn btn-outline  btn-full" id="shopModalAddCartBtn">Add to Cart</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="site-footer__inner">
+        <span class="site-footer__brand">ZEEDO <span style="font-weight:300">clothing</span></span>
+        <span class="site-footer__copy">© 2026 ZEEDO clothing. Dhaka, Bangladesh.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════
+       SHOP ENGINE
+  ══════════════════════════════════════ -->
+  <script>
+  /* ── PHOTO SLIDESHOW ENGINE ─────────────────────────── */
+  const SLIDER = {
+    slides: [],
+    current: 0,
+    container: null,
+    counterEl: null,
+    dotsEl: null,
+    touchStartX: 0,
+
+    // Build the slider DOM inside the given .modal-box__image element
+    build(imageWrapEl, images) {
+      imageWrapEl.innerHTML = '';
+      this.slides = [];
+      this.current = 0;
+
+      const count = images.length;
+
+      const slider = document.createElement('div');
+      slider.className = 'photo-slider';
+      slider.dataset.count = count;
+      this.container = slider;
+
+      // ── SLIDES ──
+      if (count === 0) {
+        const slide = document.createElement('div');
+        slide.className = 'photo-slide photo-slide--placeholder active';
+        slide.textContent = 'Photo Coming Soon';
+        slider.appendChild(slide);
+        this.slides.push(slide);
+      } else {
+        images.forEach((src, i) => {
+          const slide = document.createElement('div');
+          slide.className = 'photo-slide' + (i === 0 ? ' active' : '');
+          const img = document.createElement('img');
+          img.src     = src;
+          img.alt     = 'Product photo ' + (i + 1);
+          img.loading = i === 0 ? 'eager' : 'lazy';
+          slide.appendChild(img);
+          slider.appendChild(slide);
+          this.slides.push(slide);
+        });
+      }
+
+      // ── COUNTER (top-left) ──
+      const counter = document.createElement('div');
+      counter.className = 'photo-counter';
+      counter.textContent = count > 0 ? '1 / ' + count : '';
+      slider.appendChild(counter);
+      this.counterEl = counter;
+
+      // ── ARROWS ──
+      const prev = document.createElement('button');
+      prev.className = 'photo-arrow photo-arrow--prev';
+      prev.type = 'button';
+      prev.setAttribute('aria-label', 'Previous photo');
+      prev.innerHTML = '&#8592;';
+      prev.addEventListener('click', e => { e.stopPropagation(); this.go(this.current - 1); });
+      slider.appendChild(prev);
+
+      const next = document.createElement('button');
+      next.className = 'photo-arrow photo-arrow--next';
+      next.type = 'button';
+      next.setAttribute('aria-label', 'Next photo');
+      next.innerHTML = '&#8594;';
+      next.addEventListener('click', e => { e.stopPropagation(); this.go(this.current + 1); });
+      slider.appendChild(next);
+
+      // ── DOTS ──
+      if (count > 1) {
+        const dots = document.createElement('div');
+        dots.className = 'photo-dots';
+        for (let i = 0; i < count; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'photo-dot' + (i === 0 ? ' active' : '');
+          dot.dataset.index = i;
+          dot.addEventListener('click', e => { e.stopPropagation(); this.go(parseInt(e.target.dataset.index)); });
+          dots.appendChild(dot);
+        }
+        slider.appendChild(dots);
+        this.dotsEl = dots;
+      }
+
+      // ── TOUCH / SWIPE ──
+      slider.addEventListener('touchstart', e => { this.touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+      slider.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - this.touchStartX;
+        if (Math.abs(dx) > 40) this.go(this.current + (dx < 0 ? 1 : -1));
+      }, { passive: true });
+
+      // ── KEYBOARD (←/→ while modal open) ──
+      this._keyHandler = e => {
+        if (e.key === 'ArrowLeft')  this.go(this.current - 1);
+        if (e.key === 'ArrowRight') this.go(this.current + 1);
+      };
+
+      imageWrapEl.appendChild(slider);
+    },
+
+    go(index) {
+      const count = this.slides.length;
+      if (count <= 1) return;
+      // wrap around
+      this.current = ((index % count) + count) % count;
+      this.slides.forEach((s, i) => s.classList.toggle('active', i === this.current));
+      if (this.counterEl) this.counterEl.textContent = (this.current + 1) + ' / ' + count;
+      if (this.dotsEl) {
+        [...this.dotsEl.querySelectorAll('.photo-dot')].forEach((d, i) =>
+          d.classList.toggle('active', i === this.current)
+        );
+      }
+    },
+
+    bindKeys() { document.addEventListener('keydown', this._keyHandler); },
+    unbindKeys() { if (this._keyHandler) document.removeEventListener('keydown', this._keyHandler); },
+  };
+
+  (function () {
+    'use strict';
+
+    // ── CONFIG ────────────────────────────────────────────
+    const MAX_PER_CATEGORY = 6; // Top 6 cards shown per category (2 rows × 3 cols)
+
+    // Category list — order here = order on page
+    // label: display name in section header
+    // file:  the HTML file that IS the product database
+    const CATEGORIES = [
+      { file: 'tshirts.html',          label: 'T-Shirts' },
+      { file: 'shirts.html',           label: 'Shirts' },
+      { file: 'trousers.html',         label: 'Trousers' },
+      { file: 'shoes.html',            label: 'Shoes' },
+      { file: 'watches.html',          label: 'Watches' },
+      { file: 'perfumes.html',         label: 'Perfumes' },
+      { file: 'more-accessories.html', label: 'Accessories' },
+    ];
+    // ─────────────────────────────────────────────────────
+
+    const fmt = window.ZEEDO?.formatPrice ?? (v => parseInt(v).toLocaleString('en-BD') + ' BDT');
+
+    // ── MODAL STATE ──────────────────────────────────────
+    let activeProduct = null;
+
+    let shopModalQty = 1;
+
+    function openModal(product) {
+      activeProduct = product;
+      shopModalQty  = 1;
+      document.getElementById('shopModalQtyVal').textContent = '1';
+
+      document.getElementById('shopModalTitle').textContent    = product.title;
+      document.getElementById('shopModalPrice').textContent    = fmt(product.price);
+      document.getElementById('shopModalCategory').textContent = product.category;
+
+      // ── Build photo slideshow ──
+      const rawImgs = (product.images || '').split(',').map(s => s.trim()).filter(Boolean);
+      if (product.image && product.image.trim() !== '') rawImgs.unshift(product.image.trim());
+      const uniqueImgs = [...new Set(rawImgs)].slice(0, 5);
+      SLIDER.build(document.getElementById('shopModalImagePane'), uniqueImgs);
+      SLIDER.bindKeys();
+
+      // Rebuild color dropdown
+      const select = document.getElementById('shopModalColor');
+      select.innerHTML = '<option value="">Select a color</option>';
+      select.classList.remove('error');
+      document.getElementById('shopModalColorError').classList.remove('visible');
+
+      product.colors.split(',').forEach(c => {
+        const opt       = document.createElement('option');
+        opt.value       = c.trim();
+        opt.textContent = c.trim();
+        select.appendChild(opt);
+      });
+
+      document.getElementById('shopModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('shopModal').classList.remove('open');
+      document.body.style.overflow = '';
+      activeProduct = null; SLIDER.unbindKeys();
+    }
+
+    function goToOrder(product) {
+      localStorage.setItem('ZEEDO_CHECKOUT_ITEM', JSON.stringify(product));
+      window.location.href = 'order.html';
+    }
+
+    // Quantity controls
+    document.getElementById('shopModalQtyMinus').addEventListener('click', () => {
+      if (shopModalQty > 1) { shopModalQty--; document.getElementById('shopModalQtyVal').textContent = shopModalQty; }
+    });
+    document.getElementById('shopModalQtyPlus').addEventListener('click', () => {
+      shopModalQty++; document.getElementById('shopModalQtyVal').textContent = shopModalQty;
+    });
+
+    function validateColor() {
+      const select = document.getElementById('shopModalColor');
+      if (!select.value) {
+        select.classList.add('error');
+        document.getElementById('shopModalColorError').classList.add('visible');
+        select.focus();
+        return null;
+      }
+      return select.value;
+    }
+
+    // Order Now from modal — validate color first
+    document.getElementById('shopModalOrderBtn').addEventListener('click', () => {
+      if (!activeProduct) return;
+      const color = validateColor();
+      if (!color) return;
+      goToOrder({ ...activeProduct, selectedColor: color, qty: shopModalQty });
+    });
+
+    // Add to Cart
+    document.getElementById('shopModalAddCartBtn').addEventListener('click', () => {
+      if (!activeProduct) return;
+      const color = validateColor();
+      if (!color) return;
+      const addFn = window.ZEEDO?.addToCart;
+      if (addFn) {
+        for (let i = 0; i < shopModalQty; i++) addFn({ ...activeProduct, selectedColor: color });
+      }
+      closeModal();
+    });
+
+    // Close triggers
+    document.getElementById('shopModalClose').addEventListener('click', closeModal);
+    document.getElementById('shopModal').addEventListener('click', function (e) {
+      if (e.target === this) closeModal();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── STATIC FALLBACK DATA ──────────────────────────────
+    // Used automatically if fetch() fails (e.g. opening shop.html
+    // directly as a file:// page, where browsers block fetch() to
+    // other local files). Keeps the slideshow + everything working
+    // even without a local server. Mirrors the data-* attributes
+    // in each category page — update both places if you add products.
+    const FALLBACK_PRODUCTS = {
+      'tshirts.html': [
+        { id:'101', title:'Heavy Drop Oversized Tee',     price:'1450', image:'zt1.jpg',  images:'zt1.jpg,zt2.jpg,zt3.jpg',    colors:'Washed Black,Cream,Stone Grey',        category:'T-Shirts' },
+        { id:'102', title:'Acid Wash Graphic Tee',        price:'1250', image:'zt4.jpg',  images:'zt4.jpg,zt5.jpg,zt6.jpg',    colors:'Acid Black,Acid Grey',                 category:'T-Shirts' },
+        { id:'103', title:'Minimal Logo Tee',             price:'950',  image:'zt7.jpg',  images:'zt7.jpg,zt8.jpg,zt9.jpg',    colors:'Black,White,Navy',                     category:'T-Shirts' },
+        { id:'104', title:'Cropped Boxy Tee',             price:'1100', image:'zt10.jpg', images:'zt10.jpg,zt11.jpg,zt12.jpg', colors:'Black,Beige,Forest Green',             category:'T-Shirts' },
+        { id:'105', title:'Vintage Wash Longline Tee',    price:'1350', image:'zt13.jpg', images:'zt13.jpg,zt14.jpg,zt15.jpg', colors:'Vintage White,Vintage Black,Rust',     category:'T-Shirts' },
+        { id:'106', title:'Street Pocket Tee',            price:'850',  image:'zt16.jpg', images:'zt16.jpg,zt17.jpg,zt1.jpg',  colors:'Black,White,Slate',                    category:'T-Shirts' },
+      ],
+      'shirts.html': [
+        { id:'201', title:'Oversized Oxford Shirt',       price:'1800', image:'zs1.jpg',  images:'zs1.jpg,zs2.jpg,zs3.jpg',    colors:'White,Light Blue,Ecru',                category:'Shirts' },
+        { id:'202', title:'Cuban Collar Camp Shirt',      price:'1650', image:'zs4.jpg',  images:'zs4.jpg,zs5.jpg,zs6.jpg',    colors:'Black,Cream,Sage',                     category:'Shirts' },
+        { id:'203', title:'Linen Relaxed Shirt',          price:'1500', image:'zs7.jpg',  images:'zs7.jpg,zs8.jpg,zs9.jpg',    colors:'Sand,White,Slate Blue',                category:'Shirts' },
+        { id:'204', title:'Flannel Drop-Shoulder Shirt',  price:'1750', image:'zs10.jpg', images:'zs10.jpg,zs11.jpg,zs12.jpg', colors:'Black,Red Plaid,Grey Plaid',           category:'Shirts' },
+        { id:'205', title:'Minimal Button-Up Shirt',      price:'1350', image:'zs13.jpg', images:'zs13.jpg,zs14.jpg,zs15.jpg', colors:'White,Black,Stone',                    category:'Shirts' },
+        { id:'206', title:'Denim Overshirt',              price:'2100', image:'zs16.jpg', images:'zs16.jpg,zs1.jpg,zs2.jpg',   colors:'Washed Indigo,Black Denim',            category:'Shirts' },
+      ],
+      'trousers.html': [
+        { id:'301', title:'Wide-Leg Cargo Trousers',      price:'2200', image:'ztr1.jpg',  images:'ztr1.jpg,ztr2.jpg,ztr3.jpg',    colors:'Olive,Black,Stone',                  category:'Trousers' },
+        { id:'302', title:'Slim Tapered Chinos',          price:'1900', image:'ztr4.jpg',  images:'ztr4.jpg,ztr5.jpg,ztr6.jpg',    colors:'Khaki,Navy,Black',                   category:'Trousers' },
+        { id:'303', title:'Relaxed Linen Trousers',       price:'1750', image:'ztr7.jpg',  images:'ztr7.jpg,ztr8.jpg,ztr9.jpg',    colors:'Sand,White,Slate',                   category:'Trousers' },
+        { id:'304', title:'Track Pants',                  price:'1600', image:'ztr10.jpg', images:'ztr10.jpg,ztr11.jpg,ztr12.jpg', colors:'Black,Grey,Navy',                    category:'Trousers' },
+        { id:'305', title:'Pleated Wide Trousers',        price:'2400', image:'ztr13.jpg', images:'ztr13.jpg,ztr14.jpg,ztr15.jpg', colors:'Charcoal,Cream,Brown',               category:'Trousers' },
+        { id:'306', title:'Denim Straight-Cut Jeans',     price:'2000', image:'ztr16.jpg', images:'ztr16.jpg,ztr17.jpg,ztr18.jpg', colors:'Washed Blue,Black,Stone Wash',       category:'Trousers' },
+      ],
+      'shoes.html': [
+        { id:'401', title:'Low-Top Canvas Sneaker',       price:'2500', image:'zcs1.jpg',  images:'zcs1.jpg,zcs2.jpg,zcs3.jpg',    colors:'White,Black,Cream',                  category:'Shoes' },
+        { id:'402', title:'Chunky Platform Trainer',      price:'3200', image:'zcs4.jpg',  images:'zcs4.jpg,zcs5.jpg,zcs6.jpg',    colors:'White,Black,Grey',                   category:'Shoes' },
+        { id:'403', title:'Minimal Leather Loafer',       price:'2800', image:'zsf1.jpg',  images:'zsf1.jpg,zsf2.jpg,zsf3.jpg',    colors:'Black,Tan,White',                    category:'Shoes' },
+        { id:'404', title:'High-Top Street Boot',         price:'3500', image:'zsf4.jpg',  images:'zsf4.jpg,zsf5.jpg,zsf6.jpg',    colors:'Black,White,Olive',                  category:'Shoes' },
+        { id:'405', title:'Slip-On Mule',                 price:'1800', image:'zcs7.jpg',  images:'zcs7.jpg,zcs8.jpg,zcs9.jpg',    colors:'Black,White,Sand',                   category:'Shoes' },
+        { id:'406', title:'Retro Runner Sneaker',         price:'2900', image:'zcs10.jpg', images:'zcs10.jpg,zcs11.jpg,zcs12.jpg', colors:'White/Grey,Black/White,Navy/Red',    category:'Shoes' },
+      ],
+      'watches.html': [
+        { id:'501', title:'Minimal Dial Dress Watch',     price:'4500', image:'zw1.jpg',  images:'zw1.jpg,zw2.jpg,zw3.jpg',    colors:'Black Strap,Brown Strap,White Strap',  category:'Watches' },
+        { id:'502', title:'Chunky Sports Watch',          price:'3800', image:'zw4.jpg',  images:'zw4.jpg,zw5.jpg,zw6.jpg',    colors:'Black,White,Red',                      category:'Watches' },
+        { id:'503', title:'Field Watch',                  price:'3200', image:'zw7.jpg',  images:'zw7.jpg,zw8.jpg,zw9.jpg',    colors:'Olive Canvas,Black,Tan',               category:'Watches' },
+        { id:'504', title:'Digital Retro Watch',          price:'2800', image:'zw10.jpg', images:'zw10.jpg,zw11.jpg,zw12.jpg', colors:'Black,Silver,Gold',                    category:'Watches' },
+        { id:'505', title:'Skeleton Mechanical Watch',    price:'6500', image:'zw13.jpg', images:'zw13.jpg,zw14.jpg,zw15.jpg', colors:'Black/Gold,Silver/White',              category:'Watches' },
+        { id:'506', title:'NATO Strap Pilot Watch',       price:'3500', image:'zw16.jpg', images:'zw16.jpg,zw17.jpg,zw18.jpg', colors:'Navy NATO,Black NATO,Olive NATO',      category:'Watches' },
+      ],
+      'perfumes.html': [
+        { id:'601', title:'Dark Oud Eau de Parfum',       price:'3500', image:'zp1.jpg',  images:'zp1.jpg,zp2.jpg,zp3.jpg',    colors:'30ml,50ml,100ml', category:'Perfumes' },
+        { id:'602', title:'Aqua Street EDT',              price:'2800', image:'zp4.jpg',  images:'zp4.jpg,zp5.jpg,zp6.jpg',    colors:'30ml,50ml,100ml', category:'Perfumes' },
+        { id:'603', title:'Smoky Vetiver EDP',            price:'4200', image:'zp7.jpg',  images:'zp7.jpg,zp8.jpg,zp9.jpg',    colors:'50ml,100ml',      category:'Perfumes' },
+        { id:'604', title:'Cedar & Black Pepper EDT',     price:'3000', image:'zp10.jpg', images:'zp10.jpg,zp11.jpg,zp12.jpg', colors:'30ml,50ml,100ml', category:'Perfumes' },
+        { id:'605', title:'White Musk Parfum',            price:'2500', image:'zp13.jpg', images:'zp13.jpg,zp14.jpg,zp15.jpg', colors:'30ml,50ml',       category:'Perfumes' },
+        { id:'606', title:'Tobacco & Amber EDP',          price:'4800', image:'zp16.jpg', images:'zp16.jpg,zp17.jpg,zp18.jpg', colors:'50ml,100ml',      category:'Perfumes' },
+      ],
+      'more-accessories.html': [
+        { id:'701', title:'Structured Tote Bag',          price:'2800', image:'', images:'', colors:'Black,Cream,Olive',                  category:'Accessories' },
+        { id:'702', title:'Aviator Sunglasses',            price:'1500', image:'', images:'', colors:'Gold Frame,Silver Frame,Black Frame', category:'Accessories' },
+        { id:'703', title:'Minimal Chain Necklace',        price:'1200', image:'', images:'', colors:'Silver,Gold,Black',                  category:'Accessories' },
+        { id:'704', title:'Slim Canvas Backpack',          price:'2200', image:'', images:'', colors:'Black,Stone,Forest',                 category:'Accessories' },
+        { id:'705', title:'Leather Bifold Wallet',         price:'980',  image:'', images:'', colors:'Black,Tan,Brown',                    category:'Accessories' },
+        { id:'706', title:'Chunky Signet Ring',            price:'750',  image:'', images:'', colors:'Silver,Gold,Gunmetal',               category:'Accessories' },
+      ],
+    };
+
+    // ── FETCH & PARSE ────────────────────────────────────
+
+    async function fetchCategory(file) {
+      try {
+        const res  = await fetch(file);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const html = await res.text();
+        const doc  = new DOMParser().parseFromString(html, 'text/html');
+        const cards= [...doc.querySelectorAll('.product-card')];
+
+        if (cards.length === 0) throw new Error('No product cards found');
+
+        return cards.slice(0, MAX_PER_CATEGORY).map(card => ({
+          id:       card.dataset.id       || '',
+          title:    card.dataset.title    || 'Untitled',
+          price:    card.dataset.price    || '0',
+          image:    card.dataset.image    || '',
+          images:   card.dataset.images   || '',
+          colors:   card.dataset.colors   || 'Black',
+          category: card.dataset.category || 'Product',
+        }));
+      } catch (err) {
+        // fetch() is blocked when the page is opened directly as a file
+        // (file:// URLs can't fetch other local files due to CORS).
+        // Fall back to the embedded static product data so the shop
+        // page — and the photo slideshow — still works correctly.
+        console.warn(`[shop.js] fetch failed for ${file}, using fallback data:`, err.message);
+        return FALLBACK_PRODUCTS[file] || [];
+      }
+    }
+
+    // ── BUILD CARD ───────────────────────────────────────
+
+    function buildCard(product) {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+
+      // Image wrap
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'product-card__image-wrap';
+
+      if (product.image && product.image.trim() !== '') {
+        const img   = document.createElement('img');
+        img.src     = product.image;
+        img.alt     = product.title;
+        img.loading = 'lazy';
+        imgWrap.appendChild(img);
+      } else {
+        imgWrap.setAttribute('data-placeholder', 'Photo Coming Soon');
+      }
+
+      // Body
+      const body = document.createElement('div');
+      body.className = 'product-card__body';
+      body.innerHTML = `
+        <p class="product-card__category">${product.category}</p>
+        <p class="product-card__title">${product.title}</p>
+        <p class="product-card__price">${fmt(product.price)}</p>
+        <div class="product-card__actions">
+          <button class="btn btn-primary details-btn">Details</button>
+          <button class="btn btn-outline order-btn">Order Now</button>
+        </div>
+      `;
+
+      card.appendChild(imgWrap);
+      card.appendChild(body);
+
+      // Click: Details → open modal
+      body.querySelector('.details-btn').addEventListener('click', () => openModal(product));
+
+      // Click: Order Now → open modal (color must be selected first)
+      body.querySelector('.order-btn').addEventListener('click', () => openModal(product));
+
+      return card;
+    }
+
+    // ── BUILD CATEGORY SECTION ───────────────────────────
+
+    function buildSection(catConfig, products) {
+      const section = document.createElement('section');
+      section.className = 'category-block';
+
+      const inner = document.createElement('div');
+      inner.className = 'container';
+
+      // ── HEADING ROW ──
+      // Category title: far left
+      // "view more ->": far right, points to the exact file
+      const row = document.createElement('div');
+      row.className = 'section-row';
+      row.innerHTML = `
+        <div class="section-row__left">
+          <p class="t-subheading">Zeedo Clothing</p>
+          <h2 class="t-heading" style="margin-top:5px">${catConfig.label}</h2>
+        </div>
+        <a href="${catConfig.file}" class="view-more">view more -&gt;</a>
+      `;
+
+      inner.appendChild(row);
+
+      // ── 3-COLUMN PRODUCT GRID (2 rows × 3 cards) ──
+      const grid = document.createElement('div');
+      grid.className = 'grid-3';
+
+      if (products.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'category-empty';
+        empty.textContent = 'Coming Soon — Products Being Added';
+        grid.appendChild(empty);
+      } else {
+        products.forEach(p => grid.appendChild(buildCard(p)));
+      }
+
+      inner.appendChild(grid);
+      section.appendChild(inner);
+      return section;
+    }
+
+    // ── MAIN LOAD ────────────────────────────────────────
+
+    async function loadShop() {
+      const main     = document.getElementById('shopMain');
+      const skeleton = document.getElementById('shopSkeleton');
+
+      // Fetch all category files in parallel
+      const results = await Promise.all(
+        CATEGORIES.map(cat =>
+          fetchCategory(cat.file).then(products => ({ cat, products }))
+        )
+      );
+
+      // Remove skeleton loader
+      skeleton.remove();
+
+      // Inject category sections
+      results.forEach(({ cat, products }) => {
+        main.appendChild(buildSection(cat, products));
+      });
+    }
+
+    // Kick off
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadShop);
+    } else {
+      loadShop();
+    }
+
+  })();
+  </script>
+
+</body>
+</html>
